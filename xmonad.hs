@@ -25,7 +25,7 @@ import qualified Data.Map        as M
 -- The preferred terminal program, which is used in a binding below and by
 -- certain contrib modules.
 --
-myTerminal      = "xterm"
+myTerminal      = "gnome-terminal"
  
 -- Whether focus follows the mouse pointer.
 myFocusFollowsMouse :: Bool
@@ -87,7 +87,13 @@ myFocusedBorderColor = "#ff0000"
 myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
  
     -- launch a terminal
-    [ ((modm .|. shiftMask, xK_Return), spawn $ XMonad.terminal conf)
+    [ ((modm, xK_t), spawn $ XMonad.terminal conf)
+    
+    -- launch firefox
+    , ((modm, xK_f), spawn "firefox")
+    
+    -- launch file manager
+    , ((modm, xK_r), spawn "gnome-terminal -e ranger")
  
     -- launch dmenu
     , ((modm,               xK_p     ), spawn "exe=`dmenu_path | dmenu` && eval \"exec $exe\"")
@@ -96,7 +102,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm .|. shiftMask, xK_p     ), spawn "gmrun")
  
     -- close focused window
-    , ((modm .|. shiftMask, xK_c     ), kill)
+    , ((modm, xK_F4), kill)
  
      -- Rotate through the available layout algorithms
     , ((modm,               xK_space ), sendMessage NextLayout)
@@ -135,7 +141,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm,               xK_l     ), sendMessage Expand)
  
     -- Push window back into tiling
-    , ((modm,               xK_t     ), withFocused $ windows . W.sink)
+    , ((modm .|. shiftMask, xK_t     ), withFocused $ windows . W.sink)
  
     -- Increment the number of windows in the master area
     , ((modm              , xK_comma ), sendMessage (IncMasterN 1))
@@ -169,11 +175,11 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     ++
  
     --
-    -- mod-{w,e,r}, Switch to physical/Xinerama screens 1, 2, or 3
-    -- mod-shift-{w,e,r}, Move client to screen 1, 2, or 3
+    -- mod-{a,s,d}, Switch to physical/Xinerama screens 1, 2, or 3
+    -- mod-shift-{a,s,d}, Move client to screen 1, 2, or 3
     --
     [((m .|. modm, key), screenWorkspace sc >>= flip whenJust (windows . f))
-        | (key, sc) <- zip [xK_w, xK_e, xK_r] [0..]
+        | (key, sc) <- zip [xK_a, xK_s, xK_d] [0..]
         , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
  
  
