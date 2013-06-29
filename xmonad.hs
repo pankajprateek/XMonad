@@ -17,6 +17,7 @@
  
 import XMonad
 import Data.Monoid
+import XMonad.Layout.Spacing
 import System.Exit
  
 import qualified XMonad.StackSet as W
@@ -92,6 +93,15 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- launch firefox
     , ((modm, xK_f), spawn "firefox")
     
+    -- send shutdown signal
+    , ((modm .|. shiftMask, xK_s), spawn "sudo shutdown -h now")
+
+    -- send hibernate signal
+    , ((modm .|. shiftMask, xK_h), spawn "sudo pm-hibernate")
+
+    -- send reboot signal
+    , ((modm .|. shiftMask, xK_r), spawn "sudo reboot")
+    
     -- launch file manager
     , ((modm, xK_r), spawn "gnome-terminal -e ranger")
  
@@ -135,10 +145,10 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm .|. shiftMask, xK_k     ), windows W.swapUp    )
  
     -- Shrink the master area
-    , ((modm,               xK_h     ), sendMessage Shrink)
+    , ((modm,               xK_Left     ), sendMessage Shrink)
  
     -- Expand the master area
-    , ((modm,               xK_l     ), sendMessage Expand)
+    , ((modm,               xK_Right     ), sendMessage Expand)
  
     -- Push window back into tiling
     , ((modm .|. shiftMask, xK_t     ), withFocused $ windows . W.sink)
@@ -175,11 +185,11 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     ++
  
     --
-    -- mod-{a,s,d}, Switch to physical/Xinerama screens 1, 2, or 3
-    -- mod-shift-{a,s,d}, Move client to screen 1, 2, or 3
+    -- mod-{y,u,i}, Switch to physical/Xinerama screens 1, 2, or 3
+    -- mod-shift-{y,u,i}, Move client to screen 1, 2, or 3
     --
     [((m .|. modm, key), screenWorkspace sc >>= flip whenJust (windows . f))
-        | (key, sc) <- zip [xK_a, xK_s, xK_d] [0..]
+        | (key, sc) <- zip [xK_y, xK_u, xK_i] [0..]
         , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
  
  
@@ -222,13 +232,13 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 myLayout = tiled ||| Mirror tiled ||| Full
   where
     -- default tiling algorithm partitions the screen into two panes
-    tiled   = Tall nmaster delta ratio
+    tiled   =  Tall nmaster delta ratio
  
     -- The default number of windows in the master pane
     nmaster = 1
  
     -- Default proportion of screen occupied by master pane
-    ratio   = 1/2
+    ratio   = 2/3
  
     -- Percent of screen to increment by when resizing panes
     delta   = 3/100
