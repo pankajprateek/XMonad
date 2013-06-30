@@ -126,6 +126,13 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     
     -- launch file manager
     , ((modm, xK_r), spawn "gnome-terminal -e ranger")
+
+    -- launch emacs
+    , ((modm .|. shiftMask, xK_e), spawn "emacs")
+    , ((modm, xK_e), spawn "gnome-terminal -e 'emacs -nw'")
+
+    -- launch thunderbird
+    , ((modm, xK_w), spawn "thunderbird")
  
     -- launch dmenu
     , ((modm,               xK_p     ), spawn "exe=`dmenu_path | dmenu` && eval \"exec $exe\"")
@@ -284,7 +291,14 @@ myManageHook = composeAll
     [ className =? "MPlayer"        --> doFloat
     , className =? "Gimp"           --> doFloat
     , resource  =? "desktop_window" --> doIgnore
-    , resource  =? "kdesktop"       --> doIgnore ]
+    , resource  =? "kdesktop"       --> doIgnore 
+    , className =? "Firefox" --> doShift "2:firefox"
+    , className =? "Thunderbird" --> doShift "4:thunderbird"
+    , className =? "Vlc" --> doShift "5:media"
+    , className =? "File Operation Progress"   --> doFloat  
+    , className =? "Emacs23" --> doShift "3:work"
+--    , className =? "Gnome-terminal" --> doFloat
+    ]
  
 ------------------------------------------------------------------------
 -- Event handling
