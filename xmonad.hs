@@ -21,6 +21,13 @@ import XMonad.Layout.Spacing
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
 import XMonad.Util.Run
+import XMonad.Layout.NoBorders
+import XMonad.Layout.PerWorkspace
+import XMonad.Layout.Grid
+import XMonad.Layout.IM
+import Data.Ratio ((%))  
+import XMonad.Actions.CycleWS  
+import qualified XMonad.StackSet as W
 import System.IO
 import System.Exit
  
@@ -79,12 +86,23 @@ myModMask       = mod4Mask
 --
 -- > workspaces = ["web", "irc", "code" ] ++ map show [4..9]
 --
-myWorkspaces    = ["1","2","3","4","5","6","7","8","9"]
+
+-- Define layout for specific workspaces  
+nobordersLayout = smartBorders $ Full  
+-- nobordersLayout = noBorders $ Full  
+gridLayout = spacing 8 $ Grid
+pidginLayout = withIM (18/100) (Role "buddy_list") gridLayout
+gimpLayout = withIM (0.20) (Role "gimp-toolbox") $ withIM (0.20) (Role "gimp-dock") Full 
+   
+-- Put all layouts together  
+myLayout = onWorkspace "2:firefox" gimpLayout $ defaultLayouts 
+
+myWorkspaces = ["1:main","2:firefox","3:work","4:thunderbird","5:media","6:skype","7","8","9"]
  
 -- Border colors for unfocused and focused windows, respectively.
 --
-myNormalBorderColor  = "#dddddd"
-myFocusedBorderColor = "#ff0000"
+myNormalBorderColor  = "#60A1AD"
+myFocusedBorderColor = "#68e862"
  
 ------------------------------------------------------------------------
 -- Key bindings. Add, modify or remove key bindings here.
@@ -233,7 +251,7 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 -- The available layouts.  Note that each layout is separated by |||,
 -- which denotes layout choice.
 --
-myLayout = tiled ||| Mirror tiled ||| Full
+defaultLayouts = tiled ||| Mirror tiled ||| Full
   where
     -- default tiling algorithm partitions the screen into two panes
     tiled   =  Tall nmaster delta ratio
