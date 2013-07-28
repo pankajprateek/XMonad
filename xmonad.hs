@@ -29,6 +29,7 @@ import Data.Ratio ((%))
 import XMonad.Actions.CycleWS  
 import qualified XMonad.StackSet as W
 import Control.Monad (liftM2)
+import Graphics.X11.ExtraTypes.XF86
 import System.IO
 import System.Exit
  
@@ -142,6 +143,17 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
  
     -- launch gmrun
     , ((modm .|. shiftMask, xK_p     ), spawn "gmrun")
+
+    -- Increase Volume
+    , ((0   , xF86XK_AudioRaiseVolume  ), spawn "amixer set Master 4+")
+    , ((modm   , xK_Up  ), spawn "amixer set Master 4+")
+    
+    -- Decrease Volume
+    , ((0   , xF86XK_AudioLowerVolume  ), spawn "amixer set Master 4-")
+    , ((modm   , xK_Down  ), spawn "amixer set Master 4-")
+
+    -- Increase Volume
+    , ((0   , xF86XK_AudioMute  ), spawn "amixer set Master toggle")
  
     -- close focused window
     , ((modm, xK_F4), kill)
