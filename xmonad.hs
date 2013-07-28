@@ -28,6 +28,7 @@ import XMonad.Layout.IM
 import Data.Ratio ((%))  
 import XMonad.Actions.CycleWS  
 import qualified XMonad.StackSet as W
+import Control.Monad (liftM2)
 import System.IO
 import System.Exit
  
@@ -45,7 +46,7 @@ myFocusFollowsMouse = True
  
 -- Width of the window border in pixels.
 --
-myBorderWidth   = 1
+myBorderWidth   = 2
  
 -- modMask lets you specify which modkey you want to use. The default
 -- is mod1Mask ("left alt").  You may also consider using mod3Mask
@@ -88,14 +89,16 @@ myModMask       = mod4Mask
 --
 
 -- Define layout for specific workspaces  
-nobordersLayout = smartBorders $ Full  
+nobordersLayout = smartBorders $ Full
 -- nobordersLayout = noBorders $ Full  
-gridLayout = spacing 8 $ Grid
-pidginLayout = withIM (18/100) (Role "buddy_list") gridLayout
-gimpLayout = withIM (0.20) (Role "gimp-toolbox") $ withIM (0.20) (Role "gimp-dock") Full 
+-- gridLayout = spacing 8 $ Grid
+-- pidginLayout = withIM (18/100) (Role "buddy_list") gridLayout
+-- gimpLayout = withIM (0.20) (Role "gimp-toolbox") $ withIM (0.20) (Role "gimp-dock") Full 
    
 -- Put all layouts together  
-myLayout = onWorkspace "2:firefox" gimpLayout $ defaultLayouts 
+-- myLayout = onWorkspace "2:firefox" nobordersLayout $ defaultLayouts 
+
+myLayout = defaultLayouts
 
 myWorkspaces = ["1:main","2:firefox","3:work","4:thunderbird","5:media","6:skype","7","8","9"]
  
@@ -142,6 +145,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
  
     -- close focused window
     , ((modm, xK_F4), kill)
+    , ((modm, xK_c), kill)
  
      -- Rotate through the available layout algorithms
     , ((modm,               xK_space ), sendMessage NextLayout)
@@ -288,17 +292,18 @@ defaultLayouts = tiled ||| Mirror tiled ||| Full
 -- 'className' and 'resource' are used below.
 --
 myManageHook = composeAll
-    [ className =? "MPlayer"        --> doFloat
-    , className =? "Gimp"           --> doFloat
-    , resource  =? "desktop_window" --> doIgnore
-    , resource  =? "kdesktop"       --> doIgnore 
-    , className =? "Firefox" --> doShift "2:firefox"
-    , className =? "Thunderbird" --> doShift "4:thunderbird"
-    , className =? "Vlc" --> doShift "5:media"
+    [ className =? "MPlayer"			--> doFloat
+    , className =? "Gimp"           		--> doFloat
+    , resource  =? "desktop_window" 		--> doIgnore
+    , resource  =? "kdesktop"       		--> doIgnore 
+    , className =? "Firefox"        		--> viewShift "2:firefox"
+    , className =? "Thunderbird"    		--> doShift "4:thunderbird"
+    , className =? "Vlc"            		--> viewShift "5:media"
     , className =? "File Operation Progress"   --> doFloat  
-    , className =? "Emacs23" --> doShift "3:work"
---    , className =? "Gnome-terminal" --> doFloat
+    , className =? "Emacs23" 	   	       --> viewShift "3:work"
+--    , className =? "Gnome-terminal" 	       --> doFloat
     ]
+    where viewShift = doF . liftM2 (.) W.greedyView W.shift
  
 ------------------------------------------------------------------------
 -- Event handling
@@ -385,7 +390,9 @@ defaults = defaultConfig {
  
       -- hooks, layouts
         layoutHook         = myLayout,
-        manageHook         = myManageHook,
+       --  manageHook         = myManageHook,
+        manageHook         = manageDocks <+> myManageHook -- make sure to include myManageHook definition from above
+	                        <+> manageHook defaultConfig,
         handleEventHook    = myEventHook,
         logHook            = myLogHook,
         startupHook        = myStartupHook
