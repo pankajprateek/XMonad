@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# nitrogen --restore &
+
+feh  --bg-scale '/home/pankaj/.wallpaper' & 
+
+trayer --edge top --align right --SetDockType true --SetPartialStrut true --expand true --width 10% --tint 0x000000 --transparent true --alpha 0 --height 14 &
+
+if [ -x /usr/bin/nm-applet ] ; then
+   nm-applet --sm-disable &
+fi
+ 
+if [ -x /usr/bin/gnome-power-manager ] ; then
+   sleep 3
+   gnome-power-manager &
+fi
+
+exec xmonad
