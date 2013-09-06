@@ -2,7 +2,11 @@
 
 # nitrogen --restore &
 
-feh  --bg-scale '/home/pankaj/.wallpaper' & 
+feh  --bg-scale '/home/pankaj/.wallpaper/wallpaper' & 
+
+# gnome-terminal -e "python fire.py" &
+
+#./.wallpaper/wallpaper.sh
 
 trayer --edge top --align right --SetDockType true --SetPartialStrut true --expand true --width 10% --tint 0x000000 --transparent true --alpha 0 --height 14 &
 
@@ -14,5 +18,7 @@ if [ -x /usr/bin/gnome-power-manager ] ; then
    sleep 3
    gnome-power-manager &
 fi
+
+xpad --show &
 
 exec xmonad

@@ -152,8 +152,17 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((0   , xF86XK_AudioLowerVolume  ), spawn "amixer set Master 4-")
     , ((modm   , xK_Down  ), spawn "amixer set Master 4-")
 
-    -- Increase Volume
-    , ((0   , xF86XK_AudioMute  ), spawn "amixer set Master toggle")
+    -- Mute
+    , ((0   , xF86XK_AudioMute  ), spawn "amixer set Master 0")
+    
+    -- Toggle Play
+    , ((0   , xF86XK_AudioPlay  ), spawn "banshee --toggle-playing")
+    
+    -- Next
+    , ((0   , xF86XK_AudioNext  ), spawn "banshee --next")
+
+    -- Previous
+    , ((0   , xF86XK_AudioPrev  ), spawn "banshee --previous")
  
     -- close focused window
     , ((modm, xK_F4), kill)
@@ -246,6 +255,9 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
     -- mod-button1, Set the window to floating mode and move by dragging
     [ ((modm, button1), (\w -> focus w >> mouseMoveWindow w
                                        >> windows W.shiftMaster))
+    -- Set the window to floating mode and resize by dragging
+    , ((modm .|. shiftMask, button1), (\w -> focus w >> mouseResizeWindow w
+                                       >> windows W.shiftMaster))
  
     -- mod-button2, Raise the window to the top of the stack
     , ((modm, button2), (\w -> focus w >> windows W.shiftMaster))
@@ -314,6 +326,8 @@ myManageHook = composeAll
     , className =? "File Operation Progress"   --> doFloat  
     , className =? "Emacs23" 	   	       --> viewShift "3:work"
 --    , className =? "Gnome-terminal" 	       --> doFloat
+    , className =? "xpad"		       --> doFloat
+    , className =? "xpad"		       --> doShift "1:main"
     ]
     where viewShift = doF . liftM2 (.) W.greedyView W.shift
  
