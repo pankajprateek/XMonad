@@ -2,7 +2,11 @@
 
 # nitrogen --restore &
 
-feh  --bg-scale '/home/pankaj/.wallpaper/wallpaper' & 
+xmodmap -e 'keycode 66 = Control_L'
+xmodmap -e 'clear Lock'
+xmodmap -e 'add Control = Control_L'
+
+feh  --bg-scale '/home/pankaj/scripts/wallpaper/wallpaper.jpg' & 
 
 # gnome-terminal -e "python fire.py" &
 

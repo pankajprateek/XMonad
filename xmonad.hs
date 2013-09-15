@@ -30,6 +30,15 @@ import XMonad.Actions.CycleWS
 import qualified XMonad.StackSet as W
 import Control.Monad (liftM2)
 import Graphics.X11.ExtraTypes.XF86
+
+import XMonad.Hooks.ManageHelpers
+import XMonad.Hooks.SetWMName
+import XMonad.Layout.Fullscreen
+import XMonad.Layout.Spiral
+import XMonad.Layout.Tabbed
+import XMonad.Layout.ThreeColumns
+import XMonad.Util.EZConfig(additionalKeys)
+
 import System.IO
 import System.Exit
  
@@ -39,7 +48,8 @@ import qualified Data.Map        as M
 -- The preferred terminal program, which is used in a binding below and by
 -- certain contrib modules.
 --
-myTerminal      = "gnome-terminal"
+-- myTerminal      = "gnome-terminal"
+myTerminal      = "xterm"
  
 -- Whether focus follows the mouse pointer.
 myFocusFollowsMouse :: Bool
@@ -97,11 +107,22 @@ nobordersLayout = smartBorders $ Full
 -- gimpLayout = withIM (0.20) (Role "gimp-toolbox") $ withIM (0.20) (Role "gimp-dock") Full 
    
 -- Put all layouts together  
--- myLayout = onWorkspace "2:firefox" nobordersLayout $ defaultLayouts 
+-- myLayout = onWorkspace "2:web" nobordersLayout $ defaultLayouts 
 
-myLayout = defaultLayouts
+-- myLayout = onWorkspace "3:work" layout2 $ defaultLayouts
 
-myWorkspaces = ["1:main","2:firefox","3:work","4:thunderbird","5:media","6:skype","7","8","9"]
+myLayout = layout1
+
+tabConfig = defaultTheme {
+    activeBorderColor = "#7C7C7C",
+    activeTextColor = "#CEFFAC",
+    activeColor = "#000000",
+    inactiveBorderColor = "#7C7C7C",
+    inactiveTextColor = "#EEEEEE",
+    inactiveColor = "#000000"
+}
+
+myWorkspaces = ["1:main","2:web","3:work","4:thunderbird","5:media","6:skype","7","8","9"]
  
 -- Border colors for unfocused and focused windows, respectively.
 --
@@ -114,7 +135,9 @@ myFocusedBorderColor = "#68e862"
 myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
  
     -- launch a terminal
-    [ ((modm, xK_t), spawn $ XMonad.terminal conf)
+    [ ((modm, xK_x), spawn $ XMonad.terminal conf)
+    
+    , ((modm, xK_t), spawn "gnome-terminal")
     
     -- launch firefox
     , ((modm, xK_f), spawn "firefox")
@@ -163,6 +186,9 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
     -- Previous
     , ((0   , xF86XK_AudioPrev  ), spawn "banshee --previous")
+
+    -- Sleep
+    , ((0   , xF86XK_Sleep  ), spawn "sudo pm-suspend")
  
     -- close focused window
     , ((modm, xK_F4), kill)
@@ -299,6 +325,48 @@ defaultLayouts = tiled ||| Mirror tiled ||| Full
  
     -- Percent of screen to increment by when resizing panes
     delta   = 3/100
+
+layout2 = tiled ||| Full
+  where
+    -- default tiling algorithm partitions the screen into two panes
+    tiled   =  Tall nmaster delta ratio
+ 
+    -- The default number of windows in the master pane
+    nmaster = 2
+ 
+    -- Default proportion of screen occupied by master pane
+    ratio   = 1/2
+ 
+    -- Percent of screen to increment by when resizing panes
+    delta   = 3/100
+
+layout1 = tiled ||| Mirror tiled ||| tab ||| fullscreen
+  where
+    -- default tiling algorithm partitions the screen into two panes
+    tiled   =  Tall nmaster delta ratio
+ 
+    -- The default number of windows in the master pane
+    nmaster = 1
+ 
+    -- Default proportion of screen occupied by master pane
+    ratio   = 2/3
+ 
+    -- Percent of screen to increment by when resizing panes
+    delta   = 3/100
+
+    -- tabbed config
+    tab = tabbed shrinkText tabConfig
+    
+    -- fulscreen config
+    fullscreen = noBorders (fullscreenFull Full)
+	
+--    Tall 1 (3/100) (1/2) |||
+--    Mirror (Tall 1 (3/100) (1/2)) |||
+--    tabbed shrinkText tabConfig |||
+--    Full |||
+--    spiral (6/7)) |||
+--    noBorders (fullscreenFull Full)
+
  
 ------------------------------------------------------------------------
 -- Window rules:
@@ -320,13 +388,13 @@ myManageHook = composeAll
     , className =? "Gimp"           		--> doFloat
     , resource  =? "desktop_window" 		--> doIgnore
     , resource  =? "kdesktop"       		--> doIgnore 
-    , className =? "Firefox"        		--> viewShift "2:firefox"
+    , className =? "Firefox"        		--> viewShift "2:web"
     , className =? "Thunderbird"    		--> doShift "4:thunderbird"
     , className =? "Vlc"            		--> viewShift "5:media"
     , className =? "File Operation Progress"   --> doFloat  
     , className =? "Emacs23" 	   	       --> viewShift "3:work"
 --    , className =? "Gnome-terminal" 	       --> doFloat
-    , className =? "xpad"		       --> doFloat
+--    , className =? "xpad"		       --> doFloat
     , className =? "xpad"		       --> doShift "1:main"
     ]
     where viewShift = doF . liftM2 (.) W.greedyView W.shift
