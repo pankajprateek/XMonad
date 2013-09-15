@@ -1,1 +1,4 @@
 This is my xmonad config.
+
+Point the Exec variable in /usr/share/xsessions/xmonad.desktop to 'xmonad-init' file.
+'.xmobarrc' should be placed in /home/<username>.
