@@ -38,6 +38,7 @@ import XMonad.Layout.Spiral
 import XMonad.Layout.Tabbed
 import XMonad.Layout.ThreeColumns
 import XMonad.Util.EZConfig(additionalKeys)
+import XMonad.Layout.CenteredMaster
 
 import System.IO
 import System.Exit
@@ -111,7 +112,7 @@ nobordersLayout = smartBorders $ Full
 
 -- myLayout = onWorkspace "3:work" layout2 $ defaultLayouts
 
-myLayout = layout1
+myLayout = onWorkspace "4:read" layoutCenter $ layout1
 
 tabConfig = defaultTheme {
     activeBorderColor = "#7C7C7C",
@@ -122,7 +123,7 @@ tabConfig = defaultTheme {
     inactiveColor = "#000000"
 }
 
-myWorkspaces = ["1:main","2:web","3:work","4:thunderbird","5:media","6:skype","7","8","9"]
+myWorkspaces = ["1:main","2:web","3:work","4:read","5:media","6:skype","7","8","9"]
  
 -- Border colors for unfocused and focused windows, respectively.
 --
@@ -359,6 +360,8 @@ layout1 = tiled ||| Mirror tiled ||| tab ||| fullscreen
     
     -- fulscreen config
     fullscreen = noBorders (fullscreenFull Full)
+
+layoutCenter = centerMaster layout1
 	
 --    Tall 1 (3/100) (1/2) |||
 --    Mirror (Tall 1 (3/100) (1/2)) |||
@@ -389,7 +392,7 @@ myManageHook = composeAll
     , resource  =? "desktop_window" 		--> doIgnore
     , resource  =? "kdesktop"       		--> doIgnore 
     , className =? "Firefox"        		--> viewShift "2:web"
-    , className =? "Thunderbird"    		--> doShift "4:thunderbird"
+    , className =? "Thunderbird"    		--> doShift "4:read"
     , className =? "Vlc"            		--> viewShift "5:media"
     , className =? "File Operation Progress"   --> doFloat  
     , className =? "Emacs23" 	   	       --> viewShift "3:work"
