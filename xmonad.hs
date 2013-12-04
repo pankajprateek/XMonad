@@ -112,7 +112,8 @@ nobordersLayout = smartBorders $ Full
 
 -- myLayout = onWorkspace "3:work" layout2 $ defaultLayouts
 
-myLayout = onWorkspace "4:read" layoutCenter $ layout1
+-- myLayout = onWorkspace "4:read" layoutCenter $ layout1
+myLayout = layout1
 
 tabConfig = defaultTheme {
     activeBorderColor = "#7C7C7C",
@@ -397,7 +398,7 @@ myManageHook = composeAll
     , className =? "File Operation Progress"   --> doFloat  
     , className =? "Emacs23" 	   	       --> viewShift "3:work"
 --    , className =? "Gnome-terminal" 	       --> doFloat
---    , className =? "xpad"		       --> doFloat
+    , className =? "xpad"		       --> doFloat
     , className =? "xpad"		       --> doShift "1:main"
     ]
     where viewShift = doF . liftM2 (.) W.greedyView W.shift
