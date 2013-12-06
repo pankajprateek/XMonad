@@ -164,7 +164,8 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm, xK_w), spawn "thunderbird")
  
     -- launch dmenu
-    , ((modm,               xK_p     ), spawn "exe=`dmenu_path | dmenu` && eval \"exec $exe\"")
+    -- dmenu_run -b -nb black -nf yellow -sf yellow
+    , ((modm,               xK_p     ), spawn "exe=`dmenu_path | dmenu_run -nb black -nf white -sf white` && eval \"exec $exe\"")
  
     -- launch gmrun
     , ((modm .|. shiftMask, xK_p     ), spawn "gmrun")
