@@ -25,6 +25,9 @@ import XMonad.Layout.NoBorders
 import XMonad.Layout.PerWorkspace
 import XMonad.Layout.Grid
 import XMonad.Layout.IM
+import XMonad.Layout.Maximize
+import XMonad.Layout.NoBorders
+import XMonad.Layout.ResizableTile
 import Data.Ratio ((%))  
 import XMonad.Actions.CycleWS  
 import qualified XMonad.StackSet as W
@@ -207,6 +210,9 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
  
     -- Move focus to the next window
     , ((modm,               xK_Tab   ), windows W.focusDown)
+
+    -- Move focus to the next window
+    , ((modm .|. shiftMask, xK_Tab   ), windows W.focusUp)
  
     -- Move focus to the next window
     , ((modm,               xK_j     ), windows W.focusDown)
@@ -342,7 +348,7 @@ layout2 = tiled ||| Full
     -- Percent of screen to increment by when resizing panes
     delta   = 3/100
 
-layout1 = tiled ||| Mirror tiled ||| tab ||| fullscreen
+layout1 = tiled ||| Mirror tiled ||| tab ||| fullscreen ||| maximize (ResizableTall 1 (3 / 100) (1 / 2) [])
   where
     -- default tiling algorithm partitions the screen into two panes
     tiled   =  Tall nmaster delta ratio
