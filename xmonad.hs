@@ -106,8 +106,8 @@ myModMask       = mod4Mask
 -- Define layout for specific workspaces  
 nobordersLayout = smartBorders $ Full
 -- nobordersLayout = noBorders $ Full  
--- gridLayout = spacing 8 $ Grid
--- pidginLayout = withIM (18/100) (Role "buddy_list") gridLayout
+gridLayout = spacing 8 $ Grid
+pidginLayout = withIM (18/100) (Role "buddy_list") gridLayout
 -- gimpLayout = withIM (0.20) (Role "gimp-toolbox") $ withIM (0.20) (Role "gimp-dock") Full 
    
 -- Put all layouts together  
@@ -115,8 +115,10 @@ nobordersLayout = smartBorders $ Full
 
 -- myLayout = onWorkspace "3:work" layout2 $ defaultLayouts
 
--- myLayout = onWorkspace "4:read" layoutCenter $ layout1
-myLayout = layout1
+myLayout = onWorkspace "4:read" layoutCenter $ layout1
+-- myLayout = onWorkspace "7" gimpLayout $ onWorkspace "8:IM" pidginLayout $ layout1
+-- myLayout = onWorkspace "8:IM" pidginLayout $ layout1
+-- myLayout = layout1
 
 tabConfig = defaultTheme {
     activeBorderColor = "#7C7C7C",
@@ -127,12 +129,13 @@ tabConfig = defaultTheme {
     inactiveColor = "#000000"
 }
 
-myWorkspaces = ["1:main","2:web","3:work","4:read","5:media","6:skype","7","8","9"]
+myWorkspaces = ["1:main","2:web","3:work","4:read","5:media","6:skype","7","8:IM","9"]
  
 -- Border colors for unfocused and focused windows, respectively.
 --
 myNormalBorderColor  = "#60A1AD"
-myFocusedBorderColor = "#68e862"
+-- myFocusedBorderColor = "#68e862"
+myFocusedBorderColor = "#000000"
  
 ------------------------------------------------------------------------
 -- Key bindings. Add, modify or remove key bindings here.
@@ -146,6 +149,9 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     
     -- launch firefox
     , ((modm, xK_f), spawn "firefox")
+
+    -- launch files
+    , ((modm, xK_a), spawn "files")
     
     -- send shutdown signal
     , ((modm .|. shiftMask, xK_s), spawn "sudo shutdown -h now")
@@ -199,11 +205,15 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm, xK_F4), kill)
     , ((modm, xK_c), kill)
  
-     -- Rotate through the available layout algorithms
+    -- Rotate through the available layout algorithms
     , ((modm,               xK_space ), sendMessage NextLayout)
+    
+    -- Rotate through the available layout algorithms
+    -- , ((modm .|. shiftMask,   xK_space ), sendMessage PreviousLayout)  
+    -- Not working currently, define Previous Layout module and see to it someday
  
     --  Reset the layouts on the current workspace to default
-    , ((modm .|. shiftMask, xK_space ), setLayout $ XMonad.layoutHook conf)
+    , ((modm .|. controlMask, xK_space ), setLayout $ XMonad.layoutHook conf)
  
     -- Resize viewed windows to the correct size
     , ((modm,               xK_n     ), refresh)
@@ -368,7 +378,12 @@ layout1 = tiled ||| Mirror tiled ||| tab ||| fullscreen ||| maximize (ResizableT
     -- fulscreen config
     fullscreen = noBorders (fullscreenFull Full)
 
-layoutCenter = centerMaster layout1
+layoutC = fullscreen
+  where 
+    -- fulscreen config
+    fullscreen = noBorders (fullscreenFull Full)
+
+layoutCenter = centerMaster layoutC
 	
 --    Tall 1 (3/100) (1/2) |||
 --    Mirror (Tall 1 (3/100) (1/2)) |||
@@ -395,10 +410,11 @@ layoutCenter = centerMaster layout1
 --
 myManageHook = composeAll
     [ className =? "MPlayer"			--> doFloat
-    , className =? "Gimp"           		--> doFloat
+    , className =? "Pidgin"			--> doShift "8:IM"
+    , className =? "Gimp"           		--> doShift "7"
     , resource  =? "desktop_window" 		--> doIgnore
     , resource  =? "kdesktop"       		--> doIgnore 
-    , className =? "Firefox"        		--> viewShift "2:web"
+    , className =? "Firefox"        		--> viewShift "1:main"
     , className =? "Thunderbird"    		--> doShift "4:read"
     , className =? "Vlc"            		--> viewShift "5:media"
     , className =? "File Operation Progress"   --> doFloat  
