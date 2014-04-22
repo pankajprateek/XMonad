@@ -52,16 +52,17 @@ import qualified Data.Map        as M
 -- The preferred terminal program, which is used in a binding below and by
 -- certain contrib modules.
 --
--- myTerminal      = "gnome-terminal"
-myTerminal      = "xterm"
+myTerminal      = "tilda"
+-- myTerminal      = "xterm"
  
 -- Whether focus follows the mouse pointer.
 myFocusFollowsMouse :: Bool
-myFocusFollowsMouse = True
+-- myFocusFollowsMouse = True
+myFocusFollowsMouse = False
  
 -- Width of the window border in pixels.
 --
-myBorderWidth   = 2
+myBorderWidth   = 1
  
 -- modMask lets you specify which modkey you want to use. The default
 -- is mod1Mask ("left alt").  You may also consider using mod3Mask
@@ -129,13 +130,13 @@ tabConfig = defaultTheme {
     inactiveColor = "#000000"
 }
 
-myWorkspaces = ["1:main","2:web","3:work","4:read","5:media","6:skype","7","8:IM","9"]
+myWorkspaces = ["1:main","2:web","3:work","4:read","5","6:skype","7","8:media","9"]
  
 -- Border colors for unfocused and focused windows, respectively.
 --
-myNormalBorderColor  = "#60A1AD"
+myNormalBorderColor  = "#000000"
 -- myFocusedBorderColor = "#68e862"
-myFocusedBorderColor = "#000000"
+myFocusedBorderColor = "#60A1AD"
  
 ------------------------------------------------------------------------
 -- Key bindings. Add, modify or remove key bindings here.
@@ -145,7 +146,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- launch a terminal
     [ ((modm, xK_x), spawn $ XMonad.terminal conf)
     
-    , ((modm, xK_t), spawn "gnome-terminal")
+    , ((modm, xK_t), spawn "mate-terminal")
     
     -- launch firefox
     , ((modm, xK_f), spawn "firefox")
@@ -163,11 +164,13 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm .|. shiftMask, xK_r), spawn "sudo reboot")
     
     -- launch file manager
-    , ((modm, xK_r), spawn "gnome-terminal -e ranger")
+    , ((modm, xK_r), spawn "mate-terminal -e ranger")
+
+    , ((modm, xK_h), spawn "mate-terminal -e htop")
 
     -- launch emacs
     , ((modm .|. shiftMask, xK_e), spawn "emacs")
-    , ((modm, xK_e), spawn "gnome-terminal -e 'emacs -nw'")
+    , ((modm, xK_e), spawn "mate-terminal -e 'emacs -nw'")
 
     -- launch thunderbird
     , ((modm, xK_w), spawn "thunderbird")
@@ -261,7 +264,13 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- Use this binding with avoidStruts from Hooks.ManageDocks.
     -- See also the statusBar function from Hooks.DynamicLog.
     --
-    -- , ((modm              , xK_b     ), sendMessage ToggleStruts)
+    , ((modm              , xK_b     ), sendMessage ToggleStruts)
+
+    -- Change screen orientations
+    , ((modm .|. controlMask, xK_Right     ), spawn "xrandr -o right && feh --bg-scale /home/pankaj/scripts/wallpaper/wallpaper.jpg && killall trayer && trayer --edge top --align right --SetDockType true --SetPartialStrut false --expand true --width 10% --tint 0x000000 --transparent true --alpha 0 --height 14")
+    , ((modm .|. controlMask, xK_Left     ), spawn "xrandr -o left  && feh --bg-scale /home/pankaj/scripts/wallpaper/wallpaper.jpg && killall trayer && trayer --edge top --align right --SetDockType true --SetPartialStrut false --expand true --width 10% --tint 0x000000 --transparent true --alpha 0 --height 14")
+    , ((modm .|. controlMask, xK_Up     ), spawn "xrandr -o normal  && feh --bg-scale /home/pankaj/scripts/wallpaper/wallpaper.jpg && killall trayer && trayer --edge top --align right --SetDockType true --SetPartialStrut false --expand true --width 10% --tint 0x000000 --transparent true --alpha 0 --height 14 &")
+    , ((modm .|. controlMask, xK_Down     ), spawn "xrandr -o inverted && feh --bg-scale /home/pankaj/scripts/wallpaper/wallpaper.jpg && killall trayer && trayer --edge top --align right --SetDockType true --SetPartialStrut false --expand true --width 10% --tint 0x000000 --transparent true --alpha 0 --height 14")
  
     -- Quit xmonad
     , ((modm .|. shiftMask, xK_q     ), io (exitWith ExitSuccess))
@@ -410,15 +419,16 @@ layoutCenter = centerMaster layoutC
 --
 myManageHook = composeAll
     [ className =? "MPlayer"			--> doFloat
-    , className =? "Pidgin"			--> doShift "8:IM"
+    , className =? "Tk"				--> doFloat
+    , className =? "Pidgin"			--> doShift "8:media"
     , className =? "Gimp"           		--> doShift "7"
     , resource  =? "desktop_window" 		--> doIgnore
     , resource  =? "kdesktop"       		--> doIgnore 
-    , className =? "Firefox"        		--> viewShift "1:main"
-    , className =? "Thunderbird"    		--> doShift "4:read"
-    , className =? "Vlc"            		--> viewShift "5:media"
+--    , className =? "Firefox"        		--> viewShift "1:main"
+--    , className =? "Thunderbird"    		--> doShift "4:read"
+    , className =? "Vlc"            		--> viewShift "8:media"
     , className =? "File Operation Progress"   --> doFloat  
-    , className =? "Emacs23" 	   	       --> viewShift "3:work"
+--    , className =? "Emacs23" 	   	       --> viewShift "3:work"
 --    , className =? "Gnome-terminal" 	       --> doFloat
     , className =? "xpad"		       --> doFloat
     , className =? "xpad"		       --> doShift "1:main"
