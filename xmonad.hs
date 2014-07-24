@@ -26,6 +26,7 @@ import XMonad.Layout.PerWorkspace
 import XMonad.Layout.Grid
 import XMonad.Layout.IM
 import XMonad.Layout.Maximize
+import XMonad.Layout.Minimize
 import XMonad.Layout.NoBorders
 import XMonad.Layout.ResizableTile
 import Data.Ratio ((%))  
@@ -33,7 +34,7 @@ import XMonad.Actions.CycleWS
 import qualified XMonad.StackSet as W
 import Control.Monad (liftM2)
 import Graphics.X11.ExtraTypes.XF86
-
+import XMonad.Actions.SwapWorkspaces
 import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.SetWMName
 import XMonad.Layout.Fullscreen
@@ -57,8 +58,8 @@ myTerminal      = "tilda"
  
 -- Whether focus follows the mouse pointer.
 myFocusFollowsMouse :: Bool
--- myFocusFollowsMouse = True
-myFocusFollowsMouse = False
+myFocusFollowsMouse = True
+-- myFocusFollowsMouse = False
  
 -- Width of the window border in pixels.
 --
@@ -116,7 +117,8 @@ pidginLayout = withIM (18/100) (Role "buddy_list") gridLayout
 
 -- myLayout = onWorkspace "3:work" layout2 $ defaultLayouts
 
-myLayout = onWorkspace "4:read" layoutCenter $ layout1
+myLayout = onWorkspace "4:read" layoutCenter $ onWorkspace "7" pidginLayout $ layout1
+-- myLayout = onWorkspace "4:read" layoutCenter $ onWorkspace "9" pidginLayout $ layout1
 -- myLayout = onWorkspace "7" gimpLayout $ onWorkspace "8:IM" pidginLayout $ layout1
 -- myLayout = onWorkspace "8:IM" pidginLayout $ layout1
 -- myLayout = layout1
@@ -141,6 +143,7 @@ myFocusedBorderColor = "#60A1AD"
 ------------------------------------------------------------------------
 -- Key bindings. Add, modify or remove key bindings here.
 --
+-- xev | grep -A2 --line-buffered '^KeyRelease' | sed -n '/keycode /s/^.*keycode \([0-9]*\).* (.*, \(.*\)).*$/\1 \2/p'
 myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
  
     -- launch a terminal
@@ -182,15 +185,16 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm .|. shiftMask, xK_p     ), spawn "gmrun")
 
     -- Increase Volume
-    , ((0   , xF86XK_AudioRaiseVolume  ), spawn "amixer set Master 4+")
-    , ((modm   , xK_Up  ), spawn "amixer set Master 4+")
+    , ((0   , xF86XK_AudioRaiseVolume  ), spawn "amixer set Master 4+ && amixer -D pulse sset Master 4%+")
+    , ((modm   , xK_Up  ), spawn "amixer set Master 4+ && amixer -D pulse sset Master 4%+")
     
     -- Decrease Volume
-    , ((0   , xF86XK_AudioLowerVolume  ), spawn "amixer set Master 4-")
-    , ((modm   , xK_Down  ), spawn "amixer set Master 4-")
+    , ((0   , xF86XK_AudioLowerVolume  ), spawn "amixer set Master 4- && amixer -D pulse sset Master 4%-")
+    , ((modm   , xK_Down  ), spawn "amixer set Master 4- && amixer -D pulse sset Master 4%-")
 
     -- Mute
-    , ((0   , xF86XK_AudioMute  ), spawn "amixer set Master 0")
+    -- , ((0   , xF86XK_AudioMute  ), spawn "amixer set Master 0")
+    , ((0   , xF86XK_AudioMute  ), spawn "amixer -D pulse sset Master toggle")
     
     -- Toggle Play
     , ((0   , xF86XK_AudioPlay  ), spawn "banshee --toggle-playing")
@@ -220,6 +224,11 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
  
     -- Resize viewed windows to the correct size
     , ((modm,               xK_n     ), refresh)
+
+    -- Minimize focused window
+    , ((modm,               xK_m     ), withFocused minimizeWindow)
+    -- Restore next minimized window
+    , ((modm .|. shiftMask, xK_m     ), sendMessage RestoreNextMinimizedWin)
  
     -- Move focus to the next window
     , ((modm,               xK_Tab   ), windows W.focusDown)
@@ -234,7 +243,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm,               xK_k     ), windows W.focusUp  )
  
     -- Move focus to the master window
-    , ((modm,               xK_m     ), windows W.focusMaster  )
+    -- , ((modm,               xK_m     ), windows W.focusMaster  )
  
     -- Swap the focused window and the master window
     , ((modm,               xK_Return), windows W.swapMaster)
@@ -271,7 +280,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm .|. controlMask, xK_Left     ), spawn "xrandr -o left  && feh --bg-scale /home/pankaj/scripts/wallpaper/wallpaper.jpg && killall trayer && trayer --edge top --align right --SetDockType true --SetPartialStrut false --expand true --width 10% --tint 0x000000 --transparent true --alpha 0 --height 14")
     , ((modm .|. controlMask, xK_Up     ), spawn "xrandr -o normal  && feh --bg-scale /home/pankaj/scripts/wallpaper/wallpaper.jpg && killall trayer && trayer --edge top --align right --SetDockType true --SetPartialStrut false --expand true --width 10% --tint 0x000000 --transparent true --alpha 0 --height 14 &")
     , ((modm .|. controlMask, xK_Down     ), spawn "xrandr -o inverted && feh --bg-scale /home/pankaj/scripts/wallpaper/wallpaper.jpg && killall trayer && trayer --edge top --align right --SetDockType true --SetPartialStrut false --expand true --width 10% --tint 0x000000 --transparent true --alpha 0 --height 14")
- 
+
     -- Quit xmonad
     , ((modm .|. shiftMask, xK_q     ), io (exitWith ExitSuccess))
  
@@ -298,6 +307,9 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     [((m .|. modm, key), screenWorkspace sc >>= flip whenJust (windows . f))
         | (key, sc) <- zip [xK_y, xK_u, xK_i] [0..]
         , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
+    ++
+    [((modm .|. controlMask, k), windows $ swapWithCurrent i)
+        | (i, k) <- zip myWorkspaces [xK_1 .. xK_9]]
  
  
 ------------------------------------------------------------------------
@@ -367,7 +379,7 @@ layout2 = tiled ||| Full
     -- Percent of screen to increment by when resizing panes
     delta   = 3/100
 
-layout1 = tiled ||| Mirror tiled ||| tab ||| fullscreen ||| maximize (ResizableTall 1 (3 / 100) (1 / 2) [])
+layout1 = minimize fullscreen ||| maximize (ResizableTall 1 (3 / 100) (1 / 2) []) ||| tiled ||| Mirror tiled ||| tab
   where
     -- default tiling algorithm partitions the screen into two panes
     tiled   =  Tall nmaster delta ratio
@@ -420,8 +432,8 @@ layoutCenter = centerMaster layoutC
 myManageHook = composeAll
     [ className =? "MPlayer"			--> doFloat
     , className =? "Tk"				--> doFloat
-    , className =? "Pidgin"			--> doShift "8:media"
-    , className =? "Gimp"           		--> doShift "7"
+    , className =? "Pidgin"			--> doShift "7"
+--    , className =? "Gimp"           		--> doShift "7"
     , resource  =? "desktop_window" 		--> doIgnore
     , resource  =? "kdesktop"       		--> doIgnore 
 --    , className =? "Firefox"        		--> viewShift "1:main"
@@ -431,7 +443,8 @@ myManageHook = composeAll
 --    , className =? "Emacs23" 	   	       --> viewShift "3:work"
 --    , className =? "Gnome-terminal" 	       --> doFloat
     , className =? "xpad"		       --> doFloat
-    , className =? "xpad"		       --> doShift "1:main"
+    , className =? "xpad"		       --> doShift "9"
+    , className =? "net-sourceforge-jnlp-runtime-Boot"  --> doFloat
     ]
     where viewShift = doF . liftM2 (.) W.greedyView W.shift
  
@@ -491,7 +504,11 @@ main = xmonad =<< statusBar myBar myPP toggleStrutsKey defaults
 myBar = "xmobar"
 
 -- Custom PP, configure it as you like. It determines what is being written to the bar.
-myPP = xmobarPP { ppCurrent = xmobarColor "#429942" "" . wrap "<" ">" }
+myPP = xmobarPP { ppCurrent = xmobarColor "#429942" "" . wrap "[" "]"
+       		 -- ppOutput = hPutStrLn xmproc  
+		, ppTitle = const "" -- xmobarColor "#2CE3FF" "" . shorten 50
+                , ppLayout = const "" -- to disable the layout info on xmobar  
+       		 }
 
 -- Key binding to toggle the gap for the bar.
 toggleStrutsKey XConfig {XMonad.modMask = modMask} = (modMask, xK_b)

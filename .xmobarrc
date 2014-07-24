@@ -1,19 +1,20 @@
 Config { font = "-misc-fixed-*-*-*-*-10-*-*-*-*-*-*-*"
        , bgColor = "black"
        , fgColor = "grey"
-       , position = TopW L 90
+       , position = Static { xpos = 0 , ypos = 0, width = 1230, height = 16 } --TopW L 90
        , lowerOnStart = True
-       , commands = [ Run Network "eth0" ["-L","0","-H","32","--normal","green","--high","red"] 10
+       , commands = [ Run Network "enp6s0" ["-L","0","-H","100","--normal","green","--high","red", "-t","eth0: <rx>KB|<tx>KB "] 10
+       	 	    , Run Network "wlp3s0" ["-L","0","-H","100","--normal","green","--high","red", "-t","wlan0: <rx>KB|<tx>KB"] 10    
                     , Run Cpu ["-L","3","-H","50","--normal","green","--high","red"] 10
                     , Run Memory ["-t","Mem: <usedratio>%"] 10
-                    , Run Swap [] 10
-		    , Run Com "echo $USER" [] "user" 10
+		    , Run Com "whoami" [] "user" 10
                     , Run Com "uname" ["-n"] "" 36000
-                    , Run Date "%a %b %_d %Y %H:%M:%S" "date" 10
+		    , Run Com "/home/pankaj/get_volume.sh" [] "volume" 1
+                    , Run Date "%a %b %_d, %Y %H:%M:%S" "date" 10
 		    , Run Battery [] 10
 		    , Run StdinReader
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "%StdinReader% | %cpu% | %memory% * %swap% | %eth0% }{ <fc=red>%battery% | %date% | %user%@%uname%</fc>"
+       , template = "%StdinReader% | %cpu% | %memory% | %enp6s0%%wlp3s0% }{ <fc=red>%volume% | %battery% | %date% | %user%@%uname%</fc>"
        }
