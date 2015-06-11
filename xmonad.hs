@@ -31,7 +31,7 @@ import XMonad.Layout.Minimize
 import XMonad.Layout.ResizableTile
 import Data.Ratio ((%))  
 import XMonad.Actions.CycleWS  
-import Control.Monad (liftM2)
+-- import Control.Monad (liftM2)
 import Graphics.X11.ExtraTypes.XF86
 import XMonad.Actions.SwapWorkspaces
 import XMonad.Hooks.ManageHelpers
@@ -40,10 +40,12 @@ import XMonad.Layout.Fullscreen
 import XMonad.Layout.Spiral
 import XMonad.Layout.Tabbed
 import XMonad.Layout.ThreeColumns
-import XMonad.Util.EZConfig(additionalKeys)
+import XMonad.Util.EZConfig (additionalKeys, removeKeysP)
 import XMonad.Layout.CenteredMaster
 import XMonad.Prompt
 import XMonad.Prompt.RunOrRaise (runOrRaisePrompt)
+import Control.Monad
+import XMonad.Actions.SpawnOn (spawnOn)
 
 import System.IO
 import System.Exit
@@ -293,6 +295,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
  
     -- Restart xmonad
     , ((modm              , xK_q     ), spawn "xmonad --recompile; xmonad --restart")
+    -- , ((modm .|. shiftMask, xK_b), spawn "bash ~/script.sh")
     ]
     ++
  
@@ -489,7 +492,7 @@ myEventHook = mempty
 -- It will add EWMH logHook actions to your custom log hook by
 -- combining it with ewmhDesktopsLogHook.
 --
-myLogHook = return ()
+-- myLogHook = return ()
  
 ------------------------------------------------------------------------
 -- Startup hook
@@ -509,8 +512,10 @@ myStartupHook :: X()
 myStartupHook = do
   -- spawn editor
   -- spawn browser
+  setWMName "LG3D"
   spawn editor
   spawn browser
+  -- spawn "/home/pankaj/script2.sh"
   -- spawn music
   where
     editor = "emacsclient -c"
@@ -521,49 +526,24 @@ myStartupHook = do
  
 ------------------------------------------------------------------------
 -- Now run xmonad with all the defaults we set up.
- 
+
+main :: IO()
+
 -- Run xmonad with the settings you specify. No need to modify this.
 --
-main = xmonad =<< statusBar myBar myPP toggleStrutsKey defaults
+-- main = xmonad =<< statusBar myBar myPP toggleStrutsKey defaults
 -- main = xmonad defaults
+
+toggleStrutsKey XConfig {XMonad.modMask = modMask} = (modMask, xK_b)
 
 -- trying 2 xmobars, not working, dunno why
 -- lookup someday
--- main = do
---   xmobarBottom <- spawnPipe "xmobar"
---   xmobarTop <- spawn "xmobar ~/.xmobarrc.up"
---   xmonad $ withUrgencyHook NoUrgencyHook $ defaults
-
--- Command to launch the bar.
-myBar = "xmobar"
-
--- Custom PP, configure it as you like. It determines what is being written to the bar.
-myPP = xmobarPP { ppCurrent = xmobarColor "#429942" "" . wrap "[" "]"
-       		 -- ppOutput = hPutStrLn xmproc  
-		, ppTitle = const "" -- xmobarColor "#2CE3FF" "" . shorten 50
-                , ppLayout = const "" -- to disable the layout info on xmobar  
-                -- , ppOutput = hPutStrLn xmobarBottom
-       		 }
-                             -- { ppCurrent         = xmobarColor myYellow      "" 
-                             -- , ppHiddenNoWindows = xmobarColor myDarkGrey    "" 
-                             -- , ppHidden          = xmobarColor myLightGrey   ""
-                             -- , ppUrgent          = xmobarColor myRed         "" 
-                             -- , ppSep             = "  |  "
-                             -- , ppWsSep           = " " 
-                             -- , ppTitle           = xmobarColor myYellow      "" 
-                             -- , ppOutput          = hPutStrLn xmobarTop             -- Only the xmobar on top should receive information from xmonad
-                             -- }
-
--- Key binding to toggle the gap for the bar.
-toggleStrutsKey XConfig {XMonad.modMask = modMask} = (modMask, xK_b)
-
--- A structure containing your configuration settings, overriding
--- fields in the default config. Any you don't override, will
--- use the defaults defined in xmonad/XMonad/Config.hs
---
--- No need to modify this.
---
-defaults = defaultConfig {
+-- http://markmail.org/message/ynzwnre4qagx54ei#query:+page:1+mid:ynzwnre4qagx54ei+state:results
+main = do
+  xmobarBottom <- spawnPipe "/home/pankaj/script2.sh"--"xmobar"
+  --xmobarTop <- spawnPipe "/home/pankaj/script.sh"--"xmobar ~/.xmobarrc.up"
+  hPutStrLn xmobarTop ""
+  xmonad $ withUrgencyHook NoUrgencyHook $ defaultConfig {
       -- simple stuff
         terminal           = myTerminal,
         focusFollowsMouse  = myFocusFollowsMouse,
@@ -580,11 +560,74 @@ defaults = defaultConfig {
         mouseBindings      = myMouseBindings,
  
       -- hooks, layouts
-        layoutHook         = myLayout,
+        layoutHook         = avoidStruts $ myLayout,
        --  manageHook         = myManageHook,
         manageHook         = manageDocks <+> myManageHook -- make sure to include myManageHook definition from above
 	                        <+> manageHook defaultConfig,
         handleEventHook    = myEventHook,
-        logHook            = myLogHook,
+        -- logHook            = myLogHook,
+        logHook = dynamicLogString xmobarPP
+                   { ppCurrent = xmobarColor "#429942" "" . wrap "[" "]"
+                   , ppTitle = const "" -- xmobarColor "#2CE3FF" "" . shorten 50
+                   , ppLayout = const "" -- to disable the layout info on xmobar  
+  --                 , ppOutput = hPutStrLn xmobarBottom
+                   } >>= xmonadPropLog,
         startupHook        = myStartupHook
     }
+
+
+-- Command to launch the bar.
+-- myBar = "xmobar"
+
+-- Custom PP, configure it as you like. It determines what is being written to the bar.
+-- myPP = xmobarPP { ppCurrent = xmobarColor "#429942" "" . wrap "[" "]"
+--        		 -- ppOutput = hPutStrLn xmproc  
+-- 		, ppTitle = const "" -- xmobarColor "#2CE3FF" "" . shorten 50
+--                 , ppLayout = const "" -- to disable the layout info on xmobar  
+--                 -- , ppOutput = hPutStrLn xmobarBottom
+
+--        		 }
+                             -- { ppCurrent         = xmobarColor myYellow      "" 
+                             -- , ppHiddenNoWindows = xmobarColor myDarkGrey    "" 
+                             -- , ppHidden          = xmobarColor myLightGrey   ""
+                             -- , ppUrgent          = xmobarColor myRed         "" 
+                             -- , ppSep             = "  |  "
+                             -- , ppWsSep           = " " 
+                             -- , ppTitle           = xmobarColor myYellow      "" 
+                             -- , ppOutput          = hPutStrLn xmobarTop             -- Only the xmobar on top should receive information from xmonad
+                             -- }
+
+-- Key binding to toggle the gap for the bar.
+-- toggleStrutsKey XConfig {XMonad.modMask = modMask} = (modMask, xK_b)
+
+-- A structure containing your configuration settings, overriding
+-- fields in the default config. Any you don't override, will
+-- use the defaults defined in xmonad/XMonad/Config.hs
+--
+-- No need to modify this.
+--
+-- defaults = defaultConfig {
+--       -- simple stuff
+--         terminal           = myTerminal,
+--         focusFollowsMouse  = myFocusFollowsMouse,
+--         borderWidth        = myBorderWidth,
+--         modMask            = myModMask,
+--         -- numlockMask deprecated in 0.9.1
+--         -- numlockMask        = myNumlockMask,
+--         workspaces         = myWorkspaces,
+--         normalBorderColor  = myNormalBorderColor,
+--         focusedBorderColor = myFocusedBorderColor,
+ 
+--       -- key bindings
+--         keys               = myKeys,
+--         mouseBindings      = myMouseBindings,
+ 
+--       -- hooks, layouts
+--         layoutHook         = myLayout,
+--        --  manageHook         = myManageHook,
+--         manageHook         = manageDocks <+> myManageHook -- make sure to include myManageHook definition from above
+-- 	                        <+> manageHook defaultConfig,
+--         handleEventHook    = myEventHook,
+--         logHook            = myLogHook,
+--         startupHook        = myStartupHook
+--     }
