@@ -20,6 +20,7 @@ import Data.Monoid
 import XMonad.Layout.Spacing
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
+import XMonad.Hooks.UrgencyHook
 import XMonad.Util.Run
 import XMonad.Layout.NoBorders
 import XMonad.Layout.PerWorkspace
@@ -27,22 +28,22 @@ import XMonad.Layout.Grid
 import XMonad.Layout.IM
 import XMonad.Layout.Maximize
 import XMonad.Layout.Minimize
-import XMonad.Layout.NoBorders
 import XMonad.Layout.ResizableTile
 import Data.Ratio ((%))  
 import XMonad.Actions.CycleWS  
-import qualified XMonad.StackSet as W
 import Control.Monad (liftM2)
 import Graphics.X11.ExtraTypes.XF86
 import XMonad.Actions.SwapWorkspaces
 import XMonad.Hooks.ManageHelpers
-import XMonad.Hooks.SetWMName
+import XMonad.Hooks.SetWMName    -- Sun Java Hack!
 import XMonad.Layout.Fullscreen
 import XMonad.Layout.Spiral
 import XMonad.Layout.Tabbed
 import XMonad.Layout.ThreeColumns
 import XMonad.Util.EZConfig(additionalKeys)
 import XMonad.Layout.CenteredMaster
+import XMonad.Prompt
+import XMonad.Prompt.RunOrRaise (runOrRaisePrompt)
 
 import System.IO
 import System.Exit
@@ -53,7 +54,7 @@ import qualified Data.Map        as M
 -- The preferred terminal program, which is used in a binding below and by
 -- certain contrib modules.
 --
-myTerminal      = "tilda"
+myTerminal      = "urxvtc"
 -- myTerminal      = "xterm"
  
 -- Whether focus follows the mouse pointer.
@@ -117,11 +118,11 @@ pidginLayout = withIM (18/100) (Role "buddy_list") gridLayout
 
 -- myLayout = onWorkspace "3:work" layout2 $ defaultLayouts
 
-myLayout = onWorkspace "4:read" layoutCenter $ onWorkspace "7" pidginLayout $ layout1
+-- myLayout = onWorkspace "4:read" layoutCenter $ onWorkspace "7" pidginLayout $ layout1
 -- myLayout = onWorkspace "4:read" layoutCenter $ onWorkspace "9" pidginLayout $ layout1
 -- myLayout = onWorkspace "7" gimpLayout $ onWorkspace "8:IM" pidginLayout $ layout1
 -- myLayout = onWorkspace "8:IM" pidginLayout $ layout1
--- myLayout = layout1
+myLayout = layout1
 
 tabConfig = defaultTheme {
     activeBorderColor = "#7C7C7C",
@@ -132,7 +133,7 @@ tabConfig = defaultTheme {
     inactiveColor = "#000000"
 }
 
-myWorkspaces = ["1:main","2:web","3:work","4:read","5","6:skype","7","8:media","9"]
+myWorkspaces = ["1:main","2:web","3:code","4:file","5:read","6","7","8:media","9:float","0:misc","-"]
  
 -- Border colors for unfocused and focused windows, respectively.
 --
@@ -147,10 +148,13 @@ myFocusedBorderColor = "#60A1AD"
 myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
  
     -- launch a terminal
-    [ ((modm, xK_x), spawn $ XMonad.terminal conf)
+    [ ((modm, xK_t), spawn $ XMonad.terminal conf)
     
-    , ((modm, xK_t), spawn "mate-terminal")
-    
+    -- lock screen
+    , ((modm, xK_l), spawn "i3lock -d -I 10 -t -e -i ~/joker.png")
+
+    , ((modm .|. controlMask, xK_x), runOrRaisePrompt defaultXPConfig)
+
     -- launch firefox
     , ((modm, xK_f), spawn "firefox")
 
@@ -167,17 +171,15 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm .|. shiftMask, xK_r), spawn "sudo reboot")
     
     -- launch file manager
-    , ((modm, xK_r), spawn "mate-terminal -e ranger")
+    , ((modm .|. shiftMask, xK_r), spawn "urxvtc -e ranger")
+    , ((modm, xK_r), spawn "thunar")
 
-    , ((modm, xK_h), spawn "mate-terminal -e htop")
+    , ((modm, xK_h), spawn "urxvtc -e htop")
 
     -- launch emacs
-    , ((modm .|. shiftMask, xK_e), spawn "emacs")
-    , ((modm, xK_e), spawn "mate-terminal -e 'emacs -nw'")
+    , ((modm, xK_e), spawn "emacsclient -c")
+    , ((modm .|. shiftMask, xK_e), spawn "urxvtc -e 'emacsclient -nwc'")
 
-    -- launch thunderbird
-    , ((modm, xK_w), spawn "thunderbird")
- 
     -- launch dmenu
     , ((modm,               xK_p     ), spawn "exe=`dmenu_path | dmenu_run -nb black -nf white -sf red` && eval \"exec $exe\"")
  
@@ -197,13 +199,17 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((0   , xF86XK_AudioMute  ), spawn "amixer -D pulse sset Master toggle")
     
     -- Toggle Play
-    , ((0   , xF86XK_AudioPlay  ), spawn "banshee --toggle-playing")
+    , ((0   , xF86XK_AudioPlay  ), spawn "mpc toggle")
     
     -- Next
-    , ((0   , xF86XK_AudioNext  ), spawn "banshee --next")
+    , ((0   , xF86XK_AudioNext  ), spawn "mpc next")
 
     -- Previous
-    , ((0   , xF86XK_AudioPrev  ), spawn "banshee --previous")
+    , ((0   , xF86XK_AudioPrev  ), spawn "mpc prev")
+
+    , ((0   , 0xff14  ), spawn "mpc toggle")                                                                                     
+    , ((0   , 0xff13  ), spawn "mpc next")                                                                                       
+    , ((0   , 0xff61  ), spawn "mpc prev") 
 
     -- Sleep
     , ((0   , xF86XK_Sleep  ), spawn "sudo pm-suspend")
@@ -211,6 +217,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- close focused window
     , ((modm, xK_F4), kill)
     , ((modm, xK_c), kill)
+    , ((mod1Mask, xK_F4), kill)
  
     -- Rotate through the available layout algorithms
     , ((modm,               xK_space ), sendMessage NextLayout)
@@ -296,10 +303,10 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- mod-shift-[1..9], Move client to workspace N
     --
     [((m .|. modm, k), windows $ f i)
-        | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9]
+        | (i, k) <- zip (XMonad.workspaces conf) ([xK_1 .. xK_9] ++ [xK_0] ++ [0x2d])
         , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
     ++
- 
+
     --
     -- mod-{y,u,i}, Switch to physical/Xinerama screens 1, 2, or 3
     -- mod-shift-{y,u,i}, Move client to screen 1, 2, or 3
@@ -436,15 +443,23 @@ myManageHook = composeAll
 --    , className =? "Gimp"           		--> doShift "7"
     , resource  =? "desktop_window" 		--> doIgnore
     , resource  =? "kdesktop"       		--> doIgnore 
---    , className =? "Firefox"        		--> viewShift "1:main"
+    , className =? "Firefox"        		--> viewShift "2:web"
+    , className =? "Google-chrome-stable"        		--> viewShift "2:web"
 --    , className =? "Thunderbird"    		--> doShift "4:read"
     , className =? "Vlc"            		--> viewShift "8:media"
     , className =? "File Operation Progress"   --> doFloat  
---    , className =? "Emacs23" 	   	       --> viewShift "3:work"
---    , className =? "Gnome-terminal" 	       --> doFloat
+    , className =? "Emacs" 	   	       --> viewShift "3:code"
+--    , className =? "URxvt" 	       --> doFloat
     , className =? "xpad"		       --> doFloat
     , className =? "xpad"		       --> doShift "9"
     , className =? "net-sourceforge-jnlp-runtime-Boot"  --> doFloat
+    , className =? "Nautilus"		       --> viewShift "4:file"
+    , className =? "Thunar"		       --> viewShift "4:file"
+    , className =? "ranger"		       --> viewShift "4:file"
+    , className =? "Transmission"		       --> viewShift "-"
+    , className =? "Evince"		       --> viewShift "5:read"
+    , className =? "Evince"		       --> doFloat
+    , className =? "Spotify"		       --> viewShift "0:misc"
     ]
     where viewShift = doF . liftM2 (.) W.greedyView W.shift
  
@@ -490,7 +505,19 @@ myLogHook = return ()
 -- It will add initialization of EWMH support to your custom startup
 -- hook by combining it with ewmhDesktopsStartup.
 --
-myStartupHook = return ()
+myStartupHook :: X()
+myStartupHook = do
+  -- spawn editor
+  -- spawn browser
+  spawn editor
+  spawn browser
+  -- spawn music
+  where
+    editor = "emacsclient -c"
+    browser = "firefox"
+    -- music = "urxvtc -e ncmpcpp"
+
+-- myStartupHook = return ()
  
 ------------------------------------------------------------------------
 -- Now run xmonad with all the defaults we set up.
@@ -500,6 +527,13 @@ myStartupHook = return ()
 main = xmonad =<< statusBar myBar myPP toggleStrutsKey defaults
 -- main = xmonad defaults
 
+-- trying 2 xmobars, not working, dunno why
+-- lookup someday
+-- main = do
+--   xmobarBottom <- spawnPipe "xmobar"
+--   xmobarTop <- spawn "xmobar ~/.xmobarrc.up"
+--   xmonad $ withUrgencyHook NoUrgencyHook $ defaults
+
 -- Command to launch the bar.
 myBar = "xmobar"
 
@@ -508,7 +542,17 @@ myPP = xmobarPP { ppCurrent = xmobarColor "#429942" "" . wrap "[" "]"
        		 -- ppOutput = hPutStrLn xmproc  
 		, ppTitle = const "" -- xmobarColor "#2CE3FF" "" . shorten 50
                 , ppLayout = const "" -- to disable the layout info on xmobar  
+                -- , ppOutput = hPutStrLn xmobarBottom
        		 }
+                             -- { ppCurrent         = xmobarColor myYellow      "" 
+                             -- , ppHiddenNoWindows = xmobarColor myDarkGrey    "" 
+                             -- , ppHidden          = xmobarColor myLightGrey   ""
+                             -- , ppUrgent          = xmobarColor myRed         "" 
+                             -- , ppSep             = "  |  "
+                             -- , ppWsSep           = " " 
+                             -- , ppTitle           = xmobarColor myYellow      "" 
+                             -- , ppOutput          = hPutStrLn xmobarTop             -- Only the xmobar on top should receive information from xmonad
+                             -- }
 
 -- Key binding to toggle the gap for the bar.
 toggleStrutsKey XConfig {XMonad.modMask = modMask} = (modMask, xK_b)
