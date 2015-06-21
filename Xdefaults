@@ -1,0 +1,229 @@
+!-------------------------------!
+! Xft !
+!-------------------------------!
+!Xft.antialias: 1
+!Xft.autohint: 0
+!Xft.dpi: 112
+!Xft.hinting: 1
+!Xft.hintstyle: hintfull
+!Xft.lcdfilter: lcddefault
+!Xft.rgba: rgb
+Xft.hinting: true 
+Xft.hintstyle: hintfull 
+Xft.antialias: rgba 
+Xft.rgba: rgb
+!-------------------------------!
+! Xcursor !
+!-------------------------------!
+!Xcursor*theme: Neutral_Plus
+
+!-------------------------------!
+! XTerm !
+!-------------------------------!
+!XTerm*jumpScroll: true
+!XTerm*multiScroll: true
+!XTerm*boldColors: false
+!XTerm*boldMode: false
+!XTerm*colorBD: MediumBlue
+!XTerm*colorBDMode: true
+!XTerm*underLine: true
+!XTerm*colorUL: #1FA638
+!XTerm*colorULMode: true
+!XTerm*scrollTtyOutput: false
+!XTerm*scrollKey: true
+!XTerm*bellIsUrgent: true
+!XTerm*highlightColor: LightSkyBlue
+!XTerm*cursorColor: MediumBlue
+!XTerm*pointerColor: MediumBlue
+!XTerm*internalBorder: 3
+!XTerm*scrollBar: true
+!XTerm*rightScrollBar: true
+!XTerm*loginShell: true
+!XTerm*saveLines: 65535
+!XTerm*charClass: 33:48,35:48,37:48,43:48,45-47:48,64:48,95:48,126:48,35:48,58:48
+!
+!-------------------------------!
+! Aterm !
+!-------------------------------!
+!Aterm*transparent: true
+!Aterm*tinting: white
+!Aterm*loginShell: true
+!Aterm*saveLines: 65535
+!Aterm*scrollTtyOutput: false
+!Aterm*shading: 50
+!Aterm*tintingType: true
+!
+!-------------------------------!
+! URxvt !
+!-------------------------------!
+URxvt*loginShell: false
+URxvt*saveLines: 65535
+URxvt*depth: 32
+URxvt*scrollBar: false
+URxvt*scrollTtyOutput: false
+URxvt*scrollWithBuffer: true
+URxvt*scrollTtyKeypress: true
+!URxvt*internalBorder: 0
+!URxvt*borderLess: true
+!URxvt*tabbed*new-button: false
+!URxvt*pointerBlank: true
+!URxvt*pointerBlankDelay: 5
+Urxvt.urgentOnBell: true
+URxvt*fading: 15
+URxvt*font: xft:Source Code Pro:Regular:size=11:antialias=true,xft:Dejavu Sans Mono:size=8:antialias=true
+URxvt*intensityStyles: true
+URxvt*urgentOnBell: true
+URxvt*perl-ext: default,matcher,clipboard,keyboard-select,tabbedex,font-size,vtwheel
+URxvt*url-launcher: firefox
+URxvt*matcher.button: 1
+URxvt*secondaryWheel: true
+URxvt*underlineURLs: true
+URxvt*no-tabbedex-keys: true
+URxvt.transparent: true
+URxvt*tintColor: Dark Gray
+!URxvt.shading: 10
+URxvt*iso14755: False
+URxvt*keysym.S-Down: perl:tabbedex:new_tab
+URxvt*keysym.S-Left: perl:tabbedex:prev_tab
+URxvt*keysym.S-Right: perl:tabbedex:next_tab
+URxvt*keysym.M-Escape: perl:keyboard-select:activate
+URxvt*keysym.M-C-c: perl:clipboard:copy
+URxvt*keysym.M-C-v: perl:clipboard:paste
+!URxvt*keysym.M-C-v: perl:clipboard:paste_escaped
+URxvt*keysym.M-u: perl:url-select:select_next
+URxvt.keysym.C-S-Up: perl:font-size:increase
+URxvt.keysym.C-S-Down: perl:font-size:decrease
+URxvt*keysym.Home: \033[1~
+URxvt*keysym.End: \033[4~
+! Colors
+URxvt*colorBD: #A9CDEB
+URxvt*colorUL: #EA96EB
+URxvt*colorIT: #C9CAEC
+
+! Molokai
+URxvt*background: rgba:1B00/1D00/1E00/dddd
+!*background: #1B1D1E
+URxvt*background: Dark Gray
+URxvt*cursorColor: #0A9DFF
+! URxvt*cursorColor: #000000
+!*foreground: #FFFFFF
+URxvt*foreground: Gray
+!*highlightColor: #0A9DFF
+URxvt*highlightColor: White
+
+*color0: #000000
+*color1: #FF0000
+*color2: #A6E22E
+*color3: #FD971F
+*color4: #AE81FF
+*color5: #F92672
+*color6: #66D9EF
+*color7: #F2F2F2
+*color8: #5D5D5D
+*color9: #FF0000
+*color10: #A6E22E
+*color11: #FD971F
+*color12: #AE81FF
+*color13: #F92672
+*color14: #66D9EF
+*color15: #FFFFFF
+
+URxvt.tabbed.autohide: true
+
+URxvt.keysym.M-Escape:      perl:keyboard-select:activate
+URxvt.keysym.M-s:           perl:keyboard-select:search
+
+
+
+
+! ! urxvt
+! URxvt*buffered: true
+! URxvt*cursorBlink: true
+! URxvt*underlineColor: yellow
+! URxvt*font: xft:inconsolata:size=10:antialias=true
+! URxvt*depth: 32
+! URxvt*borderless: 1
+! URxvt*scrollBar: false
+! URxvt*loginShell: true
+! Urxvt*secondaryScroll: true # Enable Shift-PageUp/Down in screen
+! URxvt*saveLines: 5000
+! URxvt*termName: rxvt-unicode
+! URxvt.perl-ext-common: default,matcher
+! URxvt.urlLauncher: firefox
+! URxvt.matcher.button: 1
+ 
+! !! drop in Solarized colorscheme for Xresources/Xdefaults
+ 
+! !!SOLARIZED HEX 16/8 TERMCOL XTERM/HEX L*A*B RGB HSB
+! !!--------- ------- ---- ------- ----------- ---------- ----------- -----------
+! !!base03 #002b36 8/4 brblack 234 #1c1c1c 15 -12 -12 0 43 54 193 100 21
+! !!base02 #073642 0/4 black 235 #262626 20 -12 -12 7 54 66 192 90 26
+! !!base01 #586e75 10/7 brgreen 240 #585858 45 -07 -07 88 110 117 194 25 46
+! !!base00 #657b83 11/7 bryellow 241 #626262 50 -07 -07 101 123 131 195 23 51
+! !!base0 #839496 12/6 brblue 244 #808080 60 -06 -03 131 148 150 186 13 59
+! !!base1 #93a1a1 14/4 brcyan 245 #8a8a8a 65 -05 -02 147 161 161 180 9 63
+! !!base2 #eee8d5 7/7 white 254 #e4e4e4 92 -00 10 238 232 213 44 11 93
+! !!base3 #fdf6e3 15/7 brwhite 230 #ffffd7 97 00 10 253 246 227 44 10 99
+! !!yellow #b58900 3/3 yellow 136 #af8700 60 10 65 181 137 0 45 100 71
+! !!orange #cb4b16 9/3 brred 166 #d75f00 50 50 55 203 75 22 18 89 80
+! !!red #dc322f 1/1 red 160 #d70000 50 65 45 220 50 47 1 79 86
+! !!magenta #d33682 5/5 magenta 125 #af005f 50 65 -05 211 54 130 331 74 83
+! !!violet #6c71c4 13/5 brmagenta 61 #5f5faf 50 15 -45 108 113 196 237 45 77
+! !!blue #268bd2 4/4 blue 33 #0087ff 55 -10 -45 38 139 210 205 82 82
+! !!cyan #2aa198 6/6 cyan 37 #00afaf 60 -35 -05 42 161 152 175 74 63
+! !!green #859900 2/2 green 64 #5f8700 60 -20 65 133 153 0 68 100 60
+ 
+! #define S_base03 #002b36
+! #define S_base02 #073642
+! #define S_base01 #586e75
+! #define S_base00 #657b83
+! #define S_base0 #839496
+! #define S_base1 #93a1a1
+! #define S_base2 #eee8d5
+! #define S_base3 #fdf6e3
+! #define S_yellow #b58900
+! #define S_orange #cb4b16
+! #define S_red #dc322f
+! #define S_magenta #d33682
+! #define S_violet #6c71c4
+! #define S_blue #268bd2
+! #define S_cyan #2aa198
+! #define S_green #859900
+ 
+! *background: S_base03
+! *foreground: S_base00
+! *cursorColor: S_base1
+! *pointerColorBackground:S_base01
+! *pointerColorForeground:S_base1
+ 
+! !! black dark/light
+! *color0: S_base02
+! *color8: S_base03
+ 
+! !! red dark/light
+! *color1: S_red
+! *color9: S_orange
+ 
+! !! green dark/light
+! *color2: S_green
+! *color10: S_base01
+ 
+! !! yellow dark/light
+! *color3: S_yellow
+! *color11: S_base00
+ 
+! !! blue dark/light
+! *color4: S_blue
+! *color12: S_base0
+ 
+! !! magenta dark/light
+! *color5: S_magenta
+! *color13: S_violet
+ 
+! !! cyan dark/light
+! *color6: S_cyan
+! *color14: S_base1
+ 
+! !! white dark/light
+! *color7: S_base2
+! *color15: S_base3
