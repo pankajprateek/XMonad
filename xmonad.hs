@@ -35,6 +35,7 @@ import XMonad.Actions.CycleWS
 import Graphics.X11.ExtraTypes.XF86
 import XMonad.Actions.SwapWorkspaces
 import XMonad.Hooks.ManageHelpers
+import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.SetWMName    -- Sun Java Hack!
 import XMonad.Layout.Fullscreen
 import XMonad.Layout.Spiral
@@ -462,6 +463,8 @@ myManageHook = composeAll
     , className =? "Transmission"		       --> viewShift "-"
     , className =? "Evince"		       --> viewShift "5:read"
     , className =? "Evince"		       --> doFloat
+    , className =? "Okular"		       --> viewShift "5:read"
+    , className =? "Okular"		       --> doFloat
     , className =? "Spotify"		       --> viewShift "0:misc"
     ]
     where viewShift = doF . liftM2 (.) W.greedyView W.shift
@@ -478,7 +481,8 @@ myManageHook = composeAll
 -- It will add EWMH event handling to your custom event hooks by
 -- combining them with ewmhDesktopsEventHook.
 --
-myEventHook = mempty
+-- myEventHook = mempty
+myEventHook = handleEventHook defaultConfig <+> XMonad.Hooks.EwmhDesktops.fullscreenEventHook
  
 ------------------------------------------------------------------------
 -- Status bars and logging
@@ -542,8 +546,8 @@ toggleStrutsKey XConfig {XMonad.modMask = modMask} = (modMask, xK_b)
 main = do
   xmobarBottom <- spawnPipe "/home/pankaj/script2.sh"--"xmobar"
   --xmobarTop <- spawnPipe "/home/pankaj/script.sh"--"xmobar ~/.xmobarrc.up"
-  hPutStrLn xmobarTop ""
-  xmonad $ withUrgencyHook NoUrgencyHook $ defaultConfig {
+  -- hPutStrLn xmobarTop ""
+  xmonad $ withUrgencyHook NoUrgencyHook $ ewmh defaultConfig {
       -- simple stuff
         terminal           = myTerminal,
         focusFollowsMouse  = myFocusFollowsMouse,
