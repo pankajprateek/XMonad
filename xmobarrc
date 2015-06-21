@@ -1,0 +1,40 @@
+Config { -- font = "-misc-fixed-*-*-*-*-12-*-*-*-*-*-*-*"
+       font = "xft:Source Code Pro:Regular:size=9:antialias=true,xft:Dejavu Sans Mono:size=8:antialias=true"
+       , bgColor = "black"
+       , fgColor = "yellow"
+       , position = BottomW L 100--Static { xpos = 0 , ypos = 0, width = 1230, height = 16 } --TopW L 90
+       , border = TopB
+       , borderColor = "#646464"
+       , allDesktops = True
+       , lowerOnStart = True
+       , commands = [ Run Weather "VILK" ["-t","<station>: <tempC>°C", "-L", "15", "-H", "40", "--normal", "green", "--high", "red", "--low", "lightblue"] 100
+		    , Run Network "enp6s0" ["-L","0","-H","100","--normal","green","--high","red", "-t","eth0: <rx>KB|<tx>KB "] 10
+       	 	    , Run Network "wlp3s0" ["-L","0","-H","100","--normal","green","--high","red", "-t","wlan0: <rx>KB|<tx>KB"] 10
+		    , Run Com "/home/pankaj/getId.sh" [] "wifiId" 10
+                    , Run Cpu ["-L","3","-H","50","--normal","green","--high","red"] 10
+                    , Run Memory ["-t","Mem: <usedratio>%"] 10
+		    --, Run Com "whoami" [] "user" 10
+                    --, Run Com "uname" ["-n"] "" 36000
+		    , Run Com "/home/pankaj/get_volume.sh" [] "volume" 1
+                    , Run Date "%a %b %_d, %Y %H:%M:%S" "date" 10
+		    , Run Battery ["--template" , "Batt: <acstatus>"
+		                   , "--Low"      , "50"        -- units: %
+				   , "--High"     , "99"        -- units: %
+				   , "--low"      , "darkred"
+				   , "--normal"   , "red"
+				   , "--high"     , "yellow"
+				   , "--" -- battery specific options
+				   -- discharging status
+				   , "-o"	, "<left>% (<timeleft>)"
+				   -- AC "on" status
+				   , "-O"	, "<fc=#dAA520>Charging</fc>"
+				   -- charged status
+				   , "-i"	, "<fc=#006000>Charged</fc>"] 10
+                    -- , Run StdinReader
+                    , Run XMonadLog
+				  ]
+       , sepChar = "%"
+       , alignSep = "}{"
+       -- , template = "%StdinReader% | %cpu% | %memory% | %enp6s0%%wlp3s0% %wifiId% }{ <fc=yellow>%volume% | %battery% | %date% | %user%@%uname%</fc>"
+       , template = "%XMonadLog% | %cpu% | %memory% | %enp6s0%%wlp3s0% %wifiId% }{ %VILK% | <fc=yellow>%volume% | %battery% | %date%</fc>"
+       }
