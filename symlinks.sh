@@ -4,8 +4,9 @@
 
 ########## Variables
 
-dir=~/dotfiles                    # dotfiles directory
-olddir=~/dotfiles/old             # old dotfiles backup directory
+dir=~/dotfiles/                    # dotfiles directory; must end with /
+olddir=~/dotfiles/old/             # old dotfiles backup directory; must end with /
+files="Xdefaults arbtt/categorize.cfg asoundrc bash_logout bash_profile bashrc config/mpd/mpd.conf config/systemd/user/emacs.service emacs emacs.d fehbg gitconfig i3/config xinitrc xmobarrc xmobarrc.up xmonad/README xmonad/xmonad.hs zprofile zsh_profile zshenv zshrc"
 ##########
 
 # create dotfiles_old in homedir
@@ -19,12 +20,18 @@ cd $dir
 echo "...done"
 
 # move any existing dotfiles in homedir to dotfiles_old directory, then create symlinks from the homedir to any files in the ~/dotfiles directory specified in $files
-for f in * 
-do 
-    if [ $f != makesymlinks.sh ] && [ $f != old ]; then 
+for f in $files
+do
+    # echo `realpath $f` | sed "s|^$dir||"
+    if [ $f != symlinks.sh ] && [ $f != old ]; then
+	# temp=`echo $f | sed 's|/|@|g' | sed 's|^\([^@]*\)@.*$|\1|p'`
+	# echo $temp
+	# echo `realpath $temp | sed "s|$f$||"`
+	#mkdir -pv $directory
         echo "Moving $f to $olddir"
         mv ~/.$f $olddir
-        echo "Creating symlink to $f in home directory."
+        echo "Creating symlink to $f in home directory at ~/.$f."
         ln -s $dir/$f ~/.$f
+	echo
     fi
 done
