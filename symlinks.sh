@@ -29,9 +29,9 @@ do
 	# echo `realpath $temp | sed "s|$f$||"`
 	#mkdir -pv $directory
         echo "Moving $f to $olddir"
-        mv ~/.$f $olddir
+        mv -v ~/.$f $olddir
         echo "Creating symlink to $f in home directory at ~/.$f."
-        ln -s $dir/$f ~/.$f
+        ln -sv $dir/$f ~/.$f
 	echo
     fi
 done
