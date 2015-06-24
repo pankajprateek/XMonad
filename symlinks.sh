@@ -6,7 +6,7 @@
 
 dir=~/dotfiles/                    # dotfiles directory; must end with /
 olddir=~/dotfiles/old/             # old dotfiles backup directory; must end with /
-files="Xdefaults arbtt/categorize.cfg asoundrc bash_logout bash_profile bashrc config/mpd/mpd.conf config/systemd/user/emacs.service emacs emacs.d fehbg gitconfig i3/config xinitrc xmobarrc xmobarrc.up xmonad/README xmonad/xmonad.hs zprofile zsh_profile zshenv zshrc"
+files="Xdefaults arbtt asoundrc bash_logout bash_profile bashrc config/mpd config/systemd/user emacs.d fehbg gitconfig i3 xinitrc xmobarrc xmobarrc.up xmonad zprofile zsh_profile zshenv zshrc"
 ##########
 
 # create dotfiles_old in homedir
