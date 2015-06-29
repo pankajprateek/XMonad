@@ -37,6 +37,7 @@
  '(haskell-mode-hook (quote (haskell-indentation-mode)))
  '(inhibit-startup-screen t)
  '(menu-bar-mode nil)
+ '(pdf-view-midnight-colors (quote ("white smoke" . "black")))
  '(scroll-bar-mode nil)
  '(show-paren-mode t)
  '(tool-bar-mode nil))
@@ -62,6 +63,8 @@
 (require 'package)
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.milkbox.net/packages/") t)
+(push '("marmalade" . "http://marmalade-repo.org/packages/")
+      package-archives )
 (package-initialize)
 
 (require 'auto-complete)
@@ -96,6 +99,8 @@
        number-of-diary-entries 7)
 (add-hook 'diary-display-hook 'fancy-diary-display)
 (add-hook 'today-visible-calendar-hook 'calendar-mark-today)
+
+(add-hook 'pdf-view-mode-hook 'auto-revert-mode)
 
 
 ;; Helper for compilation. Close the compilation window if
@@ -162,3 +167,51 @@
 
 (set-default-font "Source Code Pro") ;;; set default font
 (setq default-frame-alist '((font . "Source Code Pro"))) ;;; set default font for emacs --daemon / emacsclient
+
+
+(pdf-tools-install)
+
+
+;; (defun my-compilation-hook ()
+;;   (when (not (get-buffer-window "*compilation*"))
+;;     (save-selected-window
+;; ;;;      (let* (x (current-buffer))
+;; 	(save-excursion
+;; 	  (let* ((w (split-window-horizontally))
+;;                ;;; (h (window-height w))
+;; 		 )
+;; 	    (select-window w)
+;; 	    (switch-to-buffer "*compilation*")
+;;           ;;; (shrink-window (- h compilation-window-height))
+;; 	    (switch-to-buffer x)
+;; ;;;	    )
+;; 	  )))))
+;; (add-hook 'compilation-mode-hook 'my-compilation-hook)
+
+
+(setq split-height-threshold 0)
+(setq split-width-threshold nil)
+
+
+(when (fboundp 'windmove-default-keybindings)
+  (windmove-default-keybindings))
+
+(defun ignore-error-wrapper (fn)
+  "Funtion return new function that ignore errors.
+   The function wraps a function with `ignore-errors' macro."
+  (let ((fn fn))
+    (lambda ()
+      (interactive)
+      (ignore-errors
+        (funcall fn)))))
+
+(global-set-key [s-left] (ignore-error-wrapper 'windmove-left))
+(global-set-key [s-right] (ignore-error-wrapper 'windmove-right))
+(global-set-key [s-up] (ignore-error-wrapper 'windmove-up))
+(global-set-key [s-down] (ignore-error-wrapper 'windmove-down))
+
+(global-set-key (kbd "C-c <left>")  'windmove-left)
+(global-set-key (kbd "C-c <right>") 'windmove-right)
+(global-set-key (kbd "C-c <up>")    'windmove-up)
+(global-set-key (kbd "C-c <down>")  'windmove-down)
+
