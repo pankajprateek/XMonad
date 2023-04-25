@@ -74,7 +74,7 @@ fi
 # ssh
 export SSH_KEY_PATH="~/.ssh/"
 
-source /home/pankaj/scripts/z/z.sh
+source /home/pankaj/usr/scripts/z/z.sh
 unset GREP_OPTIONS
 
 if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
@@ -88,25 +88,25 @@ else
   esac
 fi
 
-if [[ "$TERM" == "dumb" ]]
-then
-  unsetopt zle
-  unsetopt prompt_cr
-  unsetopt prompt_subst
-#  unfunction precmd
- # unfunction preexec
-  PS1='%c $ '
-else
-    cat << 'EOF'
-[H[2J
-        [1;36m,[1;36m                       _     _ _
-       [1;36m/#\[1;36m        __ _ _ __ ___| |__ | (_)_ __  _   ___  __
-      [1;36m,###\[1;36m      / _` | '__/ __| '_ \| | | '_ \| | | \ \/ /
-     [1;36m/#####\[1;36m    | (_| | | | (__| | | | | | | | | |_| |>  <
-    [1;36m/##[0;36m,-,##\[1;36m    \__,_|_|  \___|_| |_|_|_|_| |_|\__,_/_/\_\
-   [0;36m/##(   )##`
-  [0;36m/#.--   --.#\[1;37m   A simple, lightweight linux distribution.
- [0;36m/`           `\[0m
-EOF
-  fortune | cowsay -f $(ls /usr/share/cows/ | shuf -n1) | lolcat
-fi
+# if [[ "$TERM" == "dumb" ]]
+# then
+#   unsetopt zle
+#   unsetopt prompt_cr
+#   unsetopt prompt_subst
+# #  unfunction precmd
+#  # unfunction preexec
+#   PS1='%c $ '
+# else
+#     cat << 'EOF'
+# [H[2J
+#         [1;36m,[1;36m                       _     _ _
+#        [1;36m/#\[1;36m        __ _ _ __ ___| |__ | (_)_ __  _   ___  __
+#       [1;36m,###\[1;36m      / _` | '__/ __| '_ \| | | '_ \| | | \ \/ /
+#      [1;36m/#####\[1;36m    | (_| | | | (__| | | | | | | | | |_| |>  <
+#     [1;36m/##[0;36m,-,##\[1;36m    \__,_|_|  \___|_| |_|_|_|_| |_|\__,_/_/\_\
+#    [0;36m/##(   )##`
+#   [0;36m/#.--   --.#\[1;37m   A simple, lightweight linux distribution.
+#  [0;36m/`           `\[0m
+# EOF
+#   fortune | cowsay -f $(ls /usr/share/cows/ | shuf -n1) | lolcat
+# fi

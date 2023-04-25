@@ -9,13 +9,13 @@ xmodmap -e 'clear Lock'
 xmodmap -e 'add Control = Control_L'
 
 # because the right button broke
-synclient TapButton2=3
+#synclient TapButton2=3
 
 # turn off the annoying beep beep
 xset b off
 
 # feh  --bg-scale '/home/pankaj/scripts/wallpaper/wallpaper.jpg' & 
-feh --bg-scale '/home/pankaj/.wallpaper' &
+#feh --bg-scale '/home/pankaj/.wallpaper' &
 
 # gnome-terminal -e "python fire.py" &
 
@@ -25,8 +25,8 @@ feh --bg-scale '/home/pankaj/.wallpaper' &
 
 # dropboxd &
 urxvtd &
-arbtt-capture &
-sudo modprobe vboxdrv
+#arbtt-capture &
+#sudo modprobe vboxdrv
 
 #export PATH=$HOME/bin:$HOME/.gem/ruby/2.1.0/bin:/usr/local/bin:$PATH
 #export PATH=$HOME/.cabal/bin/:$PATH
@@ -52,5 +52,7 @@ sudo modprobe vboxdrv
 # Doesn't Work
 # xmobar ~/.xmobarrc.up &
 
+#udiskie &
+./dotfiles/randr.sh
 exec xmonad
 #exec i3

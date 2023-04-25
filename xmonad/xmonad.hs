@@ -19,9 +19,11 @@ import XMonad
 import Data.Monoid
 import XMonad.Layout.Spacing
 import XMonad.Hooks.DynamicLog
+import XMonad.Hooks.StatusBar
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.UrgencyHook
 import XMonad.Util.Run
+import XMonad.Layout.IndependentScreens
 import XMonad.Layout.NoBorders
 import XMonad.Layout.PerWorkspace
 import XMonad.Layout.Grid
@@ -57,7 +59,8 @@ import qualified Data.Map        as M
 -- The preferred terminal program, which is used in a binding below and by
 -- certain contrib modules.
 --
-myTerminal      = "urxvtc"
+-- myTerminal      = "urxvtc"
+myTerminal      = "tilda"
 -- myTerminal      = "xterm"
  
 -- Whether focus follows the mouse pointer.
@@ -113,11 +116,11 @@ myModMask       = mod4Mask
 nobordersLayout = smartBorders $ Full
 -- nobordersLayout = noBorders $ Full  
 gridLayout = spacing 8 $ Grid
-pidginLayout = withIM (18/100) (Role "buddy_list") gridLayout
+--pidginLayout = withIM (18/100) (Role "buddy_list") gridLayout
 -- gimpLayout = withIM (0.20) (Role "gimp-toolbox") $ withIM (0.20) (Role "gimp-dock") Full 
    
 -- Put all layouts together  
--- myLayout = onWorkspace "2:web" nobordersLayout $ defaultLayouts 
+-- myLayout = onWorkspace "3:web" nobordersLayout $ defaultLayouts 
 
 -- myLayout = onWorkspace "3:work" layout2 $ defaultLayouts
 
@@ -125,18 +128,18 @@ pidginLayout = withIM (18/100) (Role "buddy_list") gridLayout
 -- myLayout = onWorkspace "4:read" layoutCenter $ onWorkspace "9" pidginLayout $ layout1
 -- myLayout = onWorkspace "7" gimpLayout $ onWorkspace "8:IM" pidginLayout $ layout1
 -- myLayout = onWorkspace "8:IM" pidginLayout $ layout1
-myLayout = layout1
+myLayout = avoidStruts layout1
 
-tabConfig = defaultTheme {
-    activeBorderColor = "#7C7C7C",
-    activeTextColor = "#CEFFAC",
-    activeColor = "#000000",
-    inactiveBorderColor = "#7C7C7C",
-    inactiveTextColor = "#EEEEEE",
-    inactiveColor = "#000000"
-}
+-- tabConfig = defaultTheme {
+--    activeBorderColor = "#7C7C7C",
+--    activeTextColor = "#CEFFAC",
+--    activeColor = "#000000",
+--    inactiveBorderColor = "#7C7C7C",
+--    inactiveTextColor = "#EEEEEE",
+--    inactiveColor = "#000000"
+-- }
 
-myWorkspaces = ["1:main","2:web","3:code","4:file","5:read","6","7","8:media","9:float","0:misc","-"]
+myWorkspaces = ["1:code","2:code","3:web","4:file","5:read","6","7","8:media","9:float","0:misc","-"]
  
 -- Border colors for unfocused and focused windows, respectively.
 --
@@ -154,9 +157,9 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     [ ((modm, xK_t), spawn $ XMonad.terminal conf)
     
     -- lock screen
-    , ((modm, xK_l), spawn "i3lock -d -I 10 -t -e -i ~/joker.png")
+    , ((modm, xK_l), spawn "i3lock -t -e -f -i ~/arch.png")
 
-    , ((modm .|. controlMask, xK_x), runOrRaisePrompt defaultXPConfig)
+    -- , ((modm .|. controlMask, xK_x), runOrRaisePrompt defaultXPConfig)
 
     -- launch firefox
     , ((modm, xK_f), spawn "firefox")
@@ -171,10 +174,10 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm .|. shiftMask, xK_h), spawn "sudo pm-hibernate")
 
     -- send reboot signal
-    , ((modm .|. shiftMask, xK_r), spawn "sudo reboot")
+    -- , ((modm .|. shiftMask, xK_r), spawn "sudo reboot")
     
     -- launch file manager
-    , ((modm .|. shiftMask, xK_r), spawn "urxvtc -e ranger")
+    , ((modm .|. shiftMask, xK_r), spawn "sh /home/pankaj/dotfiles/redock.sh")
     , ((modm, xK_r), spawn "thunar")
 
     , ((modm, xK_h), spawn "urxvtc -e htop")
@@ -190,17 +193,19 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm .|. shiftMask, xK_p     ), spawn "gmrun")
 
     -- Increase Volume
-    , ((0   , xF86XK_AudioRaiseVolume  ), spawn "amixer set Master 4+ && amixer -D pulse sset Master 4%+")
-    , ((modm   , xK_Up  ), spawn "amixer set Master 4+ && amixer -D pulse sset Master 4%+")
+    , ((0   , xF86XK_AudioRaiseVolume  ), spawn "amixer set Master 4+")
+    , ((modm   , xK_Up  ), spawn "amixer set Master 4+")
     
     -- Decrease Volume
-    , ((0   , xF86XK_AudioLowerVolume  ), spawn "amixer set Master 4- && amixer -D pulse sset Master 4%-")
-    , ((modm   , xK_Down  ), spawn "amixer set Master 4- && amixer -D pulse sset Master 4%-")
+    , ((0   , xF86XK_AudioLowerVolume  ), spawn "amixer set Master 4-")
+    , ((modm   , xK_Down  ), spawn "amixer set Master 4-")
 
     -- Mute
     -- , ((0   , xF86XK_AudioMute  ), spawn "amixer set Master 0")
-    , ((0   , xF86XK_AudioMute  ), spawn "amixer -D pulse sset Master toggle")
-    
+    , ((0   , xF86XK_AudioMute  ), spawn "amixer set Master toggle")
+   
+    , ((0 , xF86XK_MonBrightnessUp), spawn "xbacklight -inc 5")
+    , ((0 , xF86XK_MonBrightnessDown), spawn "xbacklight -dec 5")
     -- Toggle Play
     , ((0   , xF86XK_AudioPlay  ), spawn "mpc toggle")
     
@@ -219,7 +224,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
  
     -- close focused window
     , ((modm, xK_F4), kill)
-    , ((modm, xK_c), kill)
+    -- , ((modm, xK_c), kill)
     , ((mod1Mask, xK_F4), kill)
  
     -- Rotate through the available layout algorithms
@@ -236,9 +241,9 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm,               xK_n     ), refresh)
 
     -- Minimize focused window
-    , ((modm,               xK_m     ), withFocused minimizeWindow)
+    --, ((modm,               xK_m     ), withFocused minimizeWindow)
     -- Restore next minimized window
-    , ((modm .|. shiftMask, xK_m     ), sendMessage RestoreNextMinimizedWin)
+    --, ((modm .|. shiftMask, xK_m     ), sendMessage RestoreNextMinimizedWin)
  
     -- Move focus to the next window
     , ((modm,               xK_Tab   ), windows W.focusDown)
@@ -286,10 +291,10 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm              , xK_b     ), sendMessage ToggleStruts)
 
     -- Change screen orientations
-    , ((modm .|. controlMask, xK_Right     ), spawn "xrandr -o right && feh --bg-scale /home/pankaj/scripts/wallpaper/wallpaper.jpg && killall trayer && trayer --edge top --align right --SetDockType true --SetPartialStrut false --expand true --width 10% --tint 0x000000 --transparent true --alpha 0 --height 14")
-    , ((modm .|. controlMask, xK_Left     ), spawn "xrandr -o left  && feh --bg-scale /home/pankaj/scripts/wallpaper/wallpaper.jpg && killall trayer && trayer --edge top --align right --SetDockType true --SetPartialStrut false --expand true --width 10% --tint 0x000000 --transparent true --alpha 0 --height 14")
-    , ((modm .|. controlMask, xK_Up     ), spawn "xrandr -o normal  && feh --bg-scale /home/pankaj/scripts/wallpaper/wallpaper.jpg && killall trayer && trayer --edge top --align right --SetDockType true --SetPartialStrut false --expand true --width 10% --tint 0x000000 --transparent true --alpha 0 --height 14 &")
-    , ((modm .|. controlMask, xK_Down     ), spawn "xrandr -o inverted && feh --bg-scale /home/pankaj/scripts/wallpaper/wallpaper.jpg && killall trayer && trayer --edge top --align right --SetDockType true --SetPartialStrut false --expand true --width 10% --tint 0x000000 --transparent true --alpha 0 --height 14")
+    --, ((modm .|. controlMask, xK_Right     ), spawn "xrandr -o right && feh --bg-scale /home/pankaj/scripts/wallpaper/wallpaper.jpg && killall trayer && trayer --edge top --align right --SetDockType true --SetPartialStrut false --expand true --width 10% --tint 0x000000 --transparent true --alpha 0 --height 14")
+    --, ((modm .|. controlMask, xK_Left     ), spawn "xrandr -o left  && feh --bg-scale /home/pankaj/scripts/wallpaper/wallpaper.jpg && killall trayer && trayer --edge top --align right --SetDockType true --SetPartialStrut false --expand true --width 10% --tint 0x000000 --transparent true --alpha 0 --height 14")
+    --, ((modm .|. controlMask, xK_Up     ), spawn "xrandr -o normal  && feh --bg-scale /home/pankaj/scripts/wallpaper/wallpaper.jpg && killall trayer && trayer --edge top --align right --SetDockType true --SetPartialStrut false --expand true --width 10% --tint 0x000000 --transparent true --alpha 0 --height 14 &")
+    --, ((modm .|. controlMask, xK_Down     ), spawn "xrandr -o inverted && feh --bg-scale /home/pankaj/scripts/wallpaper/wallpaper.jpg && killall trayer && trayer --edge top --align right --SetDockType true --SetPartialStrut false --expand true --width 10% --tint 0x000000 --transparent true --alpha 0 --height 14")
 
     -- Quit xmonad
     , ((modm .|. shiftMask, xK_q     ), io (exitWith ExitSuccess))
@@ -316,7 +321,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- mod-shift-{y,u,i}, Move client to screen 1, 2, or 3
     --
     [((m .|. modm, key), screenWorkspace sc >>= flip whenJust (windows . f))
-        | (key, sc) <- zip [xK_y, xK_u, xK_i] [0..]
+        | (key, sc) <- zip [xK_i, xK_y, xK_u] [0..]
         , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
     ++
     [((modm .|. controlMask, k), windows $ swapWithCurrent i)
@@ -390,7 +395,7 @@ layout2 = tiled ||| Full
     -- Percent of screen to increment by when resizing panes
     delta   = 3/100
 
-layout1 = minimize fullscreen ||| maximize (ResizableTall 1 (3 / 100) (1 / 2) []) ||| tiled ||| Mirror tiled ||| tab
+layout1 = minimize fullscreen ||| maximize (ResizableTall 1 (3 / 100) (1 / 2) []) ||| tiled ||| Mirror tiled -- ||| tab
   where
     -- default tiling algorithm partitions the screen into two panes
     tiled   =  Tall nmaster delta ratio
@@ -405,7 +410,7 @@ layout1 = minimize fullscreen ||| maximize (ResizableTall 1 (3 / 100) (1 / 2) []
     delta   = 3/100
 
     -- tabbed config
-    tab = tabbed shrinkText tabConfig
+    -- tab = tabbed shrinkText tabConfig
     
     -- fulscreen config
     fullscreen = noBorders (fullscreenFull Full)
@@ -416,7 +421,6 @@ layoutC = fullscreen
     fullscreen = noBorders (fullscreenFull Full)
 
 layoutCenter = centerMaster layoutC
-	
 --    Tall 1 (3/100) (1/2) |||
 --    Mirror (Tall 1 (3/100) (1/2)) |||
 --    tabbed shrinkText tabConfig |||
@@ -441,31 +445,32 @@ layoutCenter = centerMaster layoutC
 -- 'className' and 'resource' are used below.
 --
 myManageHook = composeAll
-    [ className =? "MPlayer"			--> doFloat
-    , className =? "Tk"				--> doFloat
-    , className =? "Pidgin"			--> doShift "7"
---    , className =? "Gimp"           		--> doShift "7"
-    , resource  =? "desktop_window" 		--> doIgnore
-    , resource  =? "kdesktop"       		--> doIgnore 
-    , className =? "Firefox"        		--> viewShift "2:web"
-    , className =? "Google-chrome-stable"        		--> viewShift "2:web"
---    , className =? "Thunderbird"    		--> doShift "4:read"
-    , className =? "Vlc"            		--> viewShift "8:media"
+    [ className =? "MPlayer"            --> doFloat
+    , className =? "Tk"                --> doFloat
+    , className =? "Pidgin"            --> doShift "7"
+--    , className =? "Gimp"                   --> doShift "7"
+    , resource  =? "desktop_window"         --> doIgnore
+    , resource  =? "kdesktop"               --> doIgnore 
+    , className =? "Firefox"                --> viewShift "3:web"
+    , className =? "Google-chrome-stable"                --> viewShift "3:web"
+--    , className =? "Thunderbird"            --> doShift "4:read"
+    , className =? "Vlc"                    --> viewShift "8:media"
     , className =? "File Operation Progress"   --> doFloat  
-    , className =? "Emacs" 	   	       --> viewShift "3:code"
---    , className =? "URxvt" 	       --> doFloat
-    , className =? "xpad"		       --> doFloat
-    , className =? "xpad"		       --> doShift "9"
+    , className =? "Emacs"                   --> viewShift "2:code"
+--    , className =? "URxvt"            --> doFloat
+    , className =? "xpad"               --> doFloat
+    , className =? "xpad"               --> doShift "9"
     , className =? "net-sourceforge-jnlp-runtime-Boot"  --> doFloat
-    , className =? "Nautilus"		       --> viewShift "4:file"
-    , className =? "Thunar"		       --> viewShift "4:file"
-    , className =? "ranger"		       --> viewShift "4:file"
-    , className =? "Transmission"		       --> viewShift "-"
-    , className =? "Evince"		       --> viewShift "5:read"
-    , className =? "Evince"		       --> doFloat
-    , className =? "Okular"		       --> viewShift "5:read"
-    , className =? "Okular"		       --> doFloat
-    , className =? "Spotify"		       --> viewShift "0:misc"
+    , className =? "Nautilus"               --> viewShift "4:file"
+    , className =? "Thunar"               --> viewShift "4:file"
+    , className =? "ranger"               --> viewShift "4:file"
+    , className =? "Transmission"               --> viewShift "-"
+    , className =? "Evince"               --> viewShift "5:read"
+    --, className =? "Evince"               --> doFloat
+    , className =? "Okular"               --> viewShift "5:read"
+    , className =? "Okular"               --> doFloat
+    , className =? "Spotify"               --> viewShift "0:misc"
+    , className =? "Gscreenshot"               --> doFloat
     ]
     where viewShift = doF . liftM2 (.) W.greedyView W.shift
  
@@ -482,7 +487,7 @@ myManageHook = composeAll
 -- combining them with ewmhDesktopsEventHook.
 --
 -- myEventHook = mempty
-myEventHook = handleEventHook defaultConfig <+> XMonad.Hooks.EwmhDesktops.fullscreenEventHook
+myEventHook = handleEventHook def -- <+> XMonad.Hooks.EwmhDesktops.fullscreenEventHook <+> docksEventHook
  
 ------------------------------------------------------------------------
 -- Status bars and logging
@@ -515,10 +520,10 @@ myEventHook = handleEventHook defaultConfig <+> XMonad.Hooks.EwmhDesktops.fullsc
 myStartupHook :: X()
 myStartupHook = do
   -- spawn editor
-  -- spawn browser
-  setWMName "LG3D"
-  spawn editor
   spawn browser
+  -- setWMName "LG3D"
+  -- spawn editor
+  -- spawn browser
   -- spawn "/home/pankaj/script2.sh"
   -- spawn music
   where
@@ -544,17 +549,16 @@ toggleStrutsKey XConfig {XMonad.modMask = modMask} = (modMask, xK_b)
 -- lookup someday
 -- http://markmail.org/message/ynzwnre4qagx54ei#query:+page:1+mid:ynzwnre4qagx54ei+state:results
 main = do
-  xmobarBottom <- spawnPipe "/home/pankaj/script2.sh"--"xmobar"
+  n <- countScreens
+  xmproc <- mapM (\i -> spawnPipe $ "xmobar /home/pankaj/.xmobarrc-" ++ show i ++ " -x " ++ show i) [0..n-1]
   --xmobarTop <- spawnPipe "/home/pankaj/script.sh"--"xmobar ~/.xmobarrc.up"
   -- hPutStrLn xmobarTop ""
-  xmonad $ withUrgencyHook NoUrgencyHook $ ewmh defaultConfig {
+  xmonad $ withUrgencyHook NoUrgencyHook $ docks def {
       -- simple stuff
         terminal           = myTerminal,
         focusFollowsMouse  = myFocusFollowsMouse,
         borderWidth        = myBorderWidth,
         modMask            = myModMask,
-        -- numlockMask deprecated in 0.9.1
-        -- numlockMask        = myNumlockMask,
         workspaces         = myWorkspaces,
         normalBorderColor  = myNormalBorderColor,
         focusedBorderColor = myFocusedBorderColor,
@@ -565,19 +569,20 @@ main = do
  
       -- hooks, layouts
         layoutHook         = avoidStruts $ myLayout,
-       --  manageHook         = myManageHook,
+      -- manageHook         = myManageHook,
         manageHook         = manageDocks <+> myManageHook -- make sure to include myManageHook definition from above
-	                        <+> manageHook defaultConfig,
+                            <+> manageHook def,
         handleEventHook    = myEventHook,
         -- logHook            = myLogHook,
-        logHook = dynamicLogString xmobarPP
+        logHook = mapM_ (\handle -> dynamicLogString xmobarPP
                    { ppCurrent = xmobarColor "#429942" "" . wrap "[" "]"
                    , ppTitle = const "" -- xmobarColor "#2CE3FF" "" . shorten 50
                    , ppLayout = const "" -- to disable the layout info on xmobar  
-  --                 , ppOutput = hPutStrLn xmobarBottom
-                   } >>= xmonadPropLog,
+                   , ppOutput = hPutStrLn handle
+                   } >>= xmonadPropLog) xmproc,
         startupHook        = myStartupHook
-    }
+    } `additionalKeys`
+      [ ((mod4Mask, xK_b), sendMessage ToggleStruts) ]
 
 
 -- Command to launch the bar.
@@ -585,12 +590,12 @@ main = do
 
 -- Custom PP, configure it as you like. It determines what is being written to the bar.
 -- myPP = xmobarPP { ppCurrent = xmobarColor "#429942" "" . wrap "[" "]"
---        		 -- ppOutput = hPutStrLn xmproc  
--- 		, ppTitle = const "" -- xmobarColor "#2CE3FF" "" . shorten 50
+--                 -- ppOutput = hPutStrLn xmproc  
+--         , ppTitle = const "" -- xmobarColor "#2CE3FF" "" . shorten 50
 --                 , ppLayout = const "" -- to disable the layout info on xmobar  
 --                 -- , ppOutput = hPutStrLn xmobarBottom
 
---        		 }
+--                 }
                              -- { ppCurrent         = xmobarColor myYellow      "" 
                              -- , ppHiddenNoWindows = xmobarColor myDarkGrey    "" 
                              -- , ppHidden          = xmobarColor myLightGrey   ""
@@ -630,7 +635,7 @@ main = do
 --         layoutHook         = myLayout,
 --        --  manageHook         = myManageHook,
 --         manageHook         = manageDocks <+> myManageHook -- make sure to include myManageHook definition from above
--- 	                        <+> manageHook defaultConfig,
+--                             <+> manageHook defaultConfig,
 --         handleEventHook    = myEventHook,
 --         logHook            = myLogHook,
 --         startupHook        = myStartupHook

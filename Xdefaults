@@ -68,12 +68,27 @@ URxvt*scrollTtyKeypress: true
 !URxvt*tabbed*new-button: false
 !URxvt*pointerBlank: true
 !URxvt*pointerBlankDelay: 5
-Urxvt.urgentOnBell: true
+Urxvt.urgentOnBell: false
 URxvt*fading: 15
-URxvt*font: xft:Source Code Pro:Regular:size=11:antialias=true,xft:Dejavu Sans Mono:size=8:antialias=true
+URxvt*font: xft:Source Code Pro:Regular:size=12:antialias=true,xft:wqy-zenhei
+!,xft:Source Han Sans CN:Regular:size=20:antialias=true
 URxvt*intensityStyles: true
-URxvt*urgentOnBell: true
-URxvt*perl-ext: default,matcher,clipboard,keyboard-select,tabbedex,font-size,vtwheel
+URxvt*urgentOnBell: false
+URxvt*perl-ext: default,matcher,clipboard,tabbedalt,vtwheel,resize-font
+!URxvt*perl-ext: default,matcher,clipboard,tabbed,vtwheel,resize-font
+!
+! tabbedalt config
+URxvt.tabbedalt.new-button: false
+URxvt.tabbedalt.tabbar-fg: 15
+URxvt.tabbedalt.tabbar-bg: 8
+URxvt.tabbedalt.tab-fg: 8
+URxvt.tabbedalt.tab-bg: 0
+URxvt.tabbedalt.active-fg: 1
+URxvt.tabbedalt.actives-fg: 5
+URxvt.tabbedalt.actived-fg: 4
+URxvt.tabbedalt.tab-numbers: false
+URxvt.tabbedalt.tabbar-timeouts: 16:.:8:::4:+
+
 URxvt*url-launcher: firefox
 URxvt*matcher.button: 1
 URxvt*secondaryWheel: true
@@ -82,10 +97,12 @@ URxvt*no-tabbedex-keys: true
 URxvt.transparent: true
 URxvt*tintColor: Dark Gray
 !URxvt.shading: 10
-URxvt*iso14755: False
-URxvt*keysym.S-Down: perl:tabbedex:new_tab
-URxvt*keysym.S-Left: perl:tabbedex:prev_tab
-URxvt*keysym.S-Right: perl:tabbedex:next_tab
+URxvt*iso14755: True
+URxvt*iso14755_52: True
+URxvt*keysym.M-C-Down: perl:tabbed:new_tab
+URxvt*keysym.M-C-Left: perl:tabbed:prev_tab
+URxvt*keysym.M-C-Right: perl:tabbed:next_tab
+
 URxvt*keysym.M-Escape: perl:keyboard-select:activate
 URxvt*keysym.M-C-c: perl:clipboard:copy
 URxvt*keysym.M-C-v: perl:clipboard:paste
@@ -93,40 +110,74 @@ URxvt*keysym.M-C-v: perl:clipboard:paste
 URxvt*keysym.M-u: perl:url-select:select_next
 URxvt.keysym.C-S-Up: perl:font-size:increase
 URxvt.keysym.C-S-Down: perl:font-size:decrease
+
+URxvt.keysym.Shift-Control-V: eval:paste_clipboard
+URxvt.keysym.Shift-Control-C: eval:selection_to_clipboard
+URxvt.keysym.Control-Meta-c: builtin-string:
+URxvt.keysym.Control-Meta-v: builtin-string:
+
 URxvt*keysym.Home: \033[1~
 URxvt*keysym.End: \033[4~
 ! Colors
-URxvt*colorBD: #A9CDEB
-URxvt*colorUL: #EA96EB
-URxvt*colorIT: #C9CAEC
-
+! URxvt*colorBD: #A9CDEB
+! URxvt*colorUL: #EA96EB
+! URxvt*colorIT: #C9CAEC
+! to match gnome-terminal "Linux console" scheme
+! foreground/background
+! URxvt*background: #000000
+! URxvt*foreground: #ffffff
+! black
+URxvt.color0  : #000000
+URxvt.color8  : #555555
+! red
+URxvt.color1  : #AA0000
+URxvt.color9  : #FF5555
+! green
+URxvt.color2  : #00AA00
+URxvt.color10 : #55FF55
+! yellow
+URxvt.color3  : #AA5500
+URxvt.color11 : #FFFF55
+! blue
+URxvt.color4  : #0000AA
+URxvt.color12 : #5555FF
+! magenta
+URxvt.color5  : #AA00AA
+URxvt.color13 : #FF55FF
+! cyan
+URxvt.color6  : #00AAAA
+URxvt.color14 : #55FFFF
+! white
+URxvt.color7  : #AAAAAA
+URxvt.color15 : #FFFFFF
 ! Molokai
-URxvt*background: rgba:1B00/1D00/1E00/dddd
+!URxvt*background: rgba:1B00/1D00/1E00/dddd
 !*background: #1B1D1E
-URxvt*background: Dark Gray
+!URxvt*background: Dark Gray
+URxvt*background: Black
 URxvt*cursorColor: #0A9DFF
 ! URxvt*cursorColor: #000000
 !*foreground: #FFFFFF
-URxvt*foreground: Gray
+URxvt*foreground: White
 !*highlightColor: #0A9DFF
 URxvt*highlightColor: White
 
-*color0: #000000
-*color1: #FF0000
-*color2: #A6E22E
-*color3: #FD971F
-*color4: #AE81FF
-*color5: #F92672
-*color6: #66D9EF
-*color7: #F2F2F2
-*color8: #5D5D5D
-*color9: #FF0000
-*color10: #A6E22E
-*color11: #FD971F
-*color12: #AE81FF
-*color13: #F92672
-*color14: #66D9EF
-*color15: #FFFFFF
+! *color0: #000000
+! *color1: #FF0000
+! *color2: #A6E22E
+! *color3: #FD971F
+! *color4: #AE81FF
+! *color5: #F92672
+! *color6: #66D9EF
+! *color7: #F2F2F2
+! *color8: #5D5D5D
+! *color9: #FF0000
+! *color10: #A6E22E
+! *color11: #FD971F
+! *color12: #AE81FF
+! *color13: #F92672
+! *color14: #66D9EF
+! *color15: #FFFFFF
 
 URxvt.tabbed.autohide: true
 
@@ -147,7 +198,7 @@ URxvt.keysym.M-s:           perl:keyboard-select:search
 ! URxvt*loginShell: true
 ! Urxvt*secondaryScroll: true # Enable Shift-PageUp/Down in screen
 ! URxvt*saveLines: 5000
-! URxvt*termName: rxvt-unicode
+URxvt*termName: rxvt-unicode
 ! URxvt.perl-ext-common: default,matcher
 ! URxvt.urlLauncher: firefox
 ! URxvt.matcher.button: 1
@@ -227,3 +278,310 @@ URxvt.keysym.M-s:           perl:keyboard-select:search
 ! !! white dark/light
 ! *color7: S_base2
 ! *color15: S_base3
+
+! URxvt.keysym.Mod3-S-0x20: string:[====== 
+! URxvt.keysym.Mod4-S-0x20: string:[===== 
+URxvt.keysym.Mod3-S-0x21: string:[======!
+URxvt.keysym.Mod4-S-0x21: string:[=====!
+URxvt.keysym.C-S-0x21: string:[=!
+URxvt.keysym.Mod3-S-0x22: string:[======
+URxvt.keysym.Mod4-S-0x22: string:[=====
+URxvt.keysym.C-S-0x22: string:[=
+URxvt.keysym.Mod3-S-0x23: string:[======#
+URxvt.keysym.Mod4-S-0x23: string:[=====#
+URxvt.keysym.C-S-0x23: string:[=#
+URxvt.keysym.Mod3-S-0x24: string:[======$
+URxvt.keysym.Mod4-S-0x24: string:[=====$
+URxvt.keysym.C-S-0x24: string:[=$
+URxvt.keysym.Mod3-S-0x25: string:[======%
+URxvt.keysym.Mod4-S-0x25: string:[=====%
+URxvt.keysym.C-S-0x25: string:[=%
+URxvt.keysym.Mod3-S-0x26: string:[======&
+URxvt.keysym.Mod4-S-0x26: string:[=====&
+URxvt.keysym.C-S-0x26: string:[=&
+URxvt.keysym.Mod3-0x27: string:@h
+URxvt.keysym.Mod4-0x27: string:@s
+URxvt.keysym.C-0x27: string:@c
+URxvt.keysym.Mod3-S-0x28: string:[======(
+URxvt.keysym.Mod4-S-0x28: string:[=====(
+URxvt.keysym.C-S-0x28: string:[=(
+URxvt.keysym.Mod3-S-0x29: string:[======)
+URxvt.keysym.Mod4-S-0x29: string:[=====)
+URxvt.keysym.C-S-0x29: string:[=)
+URxvt.keysym.Mod3-S-0x2a: string:[======*
+URxvt.keysym.Mod4-S-0x2a: string:[=====*
+URxvt.keysym.C-S-0x2a: string:[=*
+URxvt.keysym.Mod3-S-0x2b: string:[======+
+URxvt.keysym.Mod4-S-0x2b: string:[=====+
+! URxvt.keysym.C-S-0x2b: string:[=+
+URxvt.keysym.Mod3-0x2c: string:@h,
+URxvt.keysym.Mod4-0x2c: string:@s,
+URxvt.keysym.C-0x2c: string:@c,
+URxvt.keysym.Mod3-0x2d: string:@h-
+URxvt.keysym.Mod4-0x2d: string:@s-
+! URxvt.keysym.C-0x2d: string:@c-
+URxvt.keysym.Mod3-0x2e: string:@h.
+URxvt.keysym.Mod4-0x2e: string:@s.
+URxvt.keysym.C-0x2e: string:@c.
+URxvt.keysym.Mod3-0x2f: string:@h/
+URxvt.keysym.Mod4-0x2f: string:@s/
+URxvt.keysym.Mod3-0x30: string:@h0
+URxvt.keysym.Mod4-0x30: string:@s0
+URxvt.keysym.C-0x30: string:@c0
+URxvt.keysym.Mod3-0x31: string:@h1
+URxvt.keysym.Mod4-0x31: string:@s1
+URxvt.keysym.C-0x31: string:@c1
+URxvt.keysym.Mod3-0x32: string:@h2
+URxvt.keysym.Mod4-0x32: string:@s2
+URxvt.keysym.C-0x32: string:@c2
+URxvt.keysym.Mod3-0x33: string:@h3
+URxvt.keysym.Mod4-0x33: string:@s3
+URxvt.keysym.C-0x33: string:@c3
+URxvt.keysym.Mod3-0x34: string:@h4
+URxvt.keysym.Mod4-0x34: string:@s4
+URxvt.keysym.C-0x34: string:@c4
+URxvt.keysym.Mod3-0x35: string:@h5
+URxvt.keysym.Mod4-0x35: string:@s5
+URxvt.keysym.C-0x35: string:@c5
+URxvt.keysym.Mod3-0x36: string:@h6
+URxvt.keysym.Mod4-0x36: string:@s6
+URxvt.keysym.C-0x36: string:@c6
+URxvt.keysym.Mod3-0x37: string:@h7
+URxvt.keysym.Mod4-0x37: string:@s7
+URxvt.keysym.C-0x37: string:@c7
+URxvt.keysym.Mod3-0x38: string:@h8
+URxvt.keysym.Mod4-0x38: string:@s8
+URxvt.keysym.C-0x38: string:@c8
+URxvt.keysym.Mod3-0x39: string:@h9
+URxvt.keysym.Mod4-0x39: string:@s9
+URxvt.keysym.C-0x39: string:@c9
+URxvt.keysym.Mod3-S-0x3a: string:[======:
+URxvt.keysym.Mod4-S-0x3a: string:[=====:
+URxvt.keysym.Mod3-0x3b: string:@h;
+URxvt.keysym.Mod4-0x3b: string:@s;
+URxvt.keysym.C-0x3b: string:@c;
+! custom C-S-<
+URxvt.keysym.C-S-0x3c: string:[=<
+URxvt.keysym.Mod3-S-0x3c: string:[======<
+URxvt.keysym.Mod4-S-0x3c: string:[=====<
+URxvt.keysym.Mod3-0x3d: string:@h=
+URxvt.keysym.Mod4-0x3d: string:@s=
+! custom C-=
+URxvt.keysym.C-0x3d: string:@c=
+URxvt.keysym.C-S-0x3d: string:[==
+! custom C-S->
+URxvt.keysym.C-S-0x3e: string:[=>
+URxvt.keysym.Mod3-S-0x3e: string:[======>
+URxvt.keysym.Mod4-S-0x3e: string:[=====>
+URxvt.keysym.Mod3-S-0x3f: string:[======?
+URxvt.keysym.Mod4-S-0x3f: string:[=====?
+URxvt.keysym.Mod3-S-0x40: string:[======@
+URxvt.keysym.Mod4-S-0x40: string:[=====@
+URxvt.keysym.Mod3-S-0x41: string:[======A
+URxvt.keysym.Mod4-S-0x41: string:[=====A
+URxvt.keysym.C-S-0x41: string:[=A
+URxvt.keysym.M-S-0x41: string:[===A
+URxvt.keysym.C-M-S-0x41: string:[==A
+URxvt.keysym.Mod3-S-0x42: string:[======B
+URxvt.keysym.Mod4-S-0x42: string:[=====B
+URxvt.keysym.C-S-0x42: string:[=B
+URxvt.keysym.M-S-0x42: string:[===B
+URxvt.keysym.C-M-S-0x42: string:[==B
+URxvt.keysym.Mod3-S-0x43: string:[======C
+URxvt.keysym.Mod4-S-0x43: string:[=====C
+URxvt.keysym.C-S-0x43: string:[=C
+URxvt.keysym.M-S-0x43: string:[===C
+URxvt.keysym.C-M-S-0x43: string:[==C
+URxvt.keysym.Mod3-S-0x44: string:[======D
+URxvt.keysym.Mod4-S-0x44: string:[=====D
+URxvt.keysym.C-S-0x44: string:[=D
+URxvt.keysym.M-S-0x44: string:[===D
+URxvt.keysym.C-M-S-0x44: string:[==D
+URxvt.keysym.Mod3-S-0x45: string:[======E
+URxvt.keysym.Mod4-S-0x45: string:[=====E
+URxvt.keysym.C-S-0x45: string:[=E
+URxvt.keysym.M-S-0x45: string:[===E
+URxvt.keysym.C-M-S-0x45: string:[==E
+URxvt.keysym.Mod3-S-0x46: string:[======F
+URxvt.keysym.Mod4-S-0x46: string:[=====F
+URxvt.keysym.C-S-0x46: string:[=F
+URxvt.keysym.M-S-0x46: string:[===F
+URxvt.keysym.C-M-S-0x46: string:[==F
+URxvt.keysym.Mod3-S-0x47: string:[======G
+URxvt.keysym.Mod4-S-0x47: string:[=====G
+URxvt.keysym.C-S-0x47: string:[=G
+URxvt.keysym.M-S-0x47: string:[===G
+URxvt.keysym.C-M-S-0x47: string:[==G
+URxvt.keysym.Mod3-S-0x48: string:[======H
+URxvt.keysym.Mod4-S-0x48: string:[=====H
+URxvt.keysym.C-S-0x48: string:[=H
+URxvt.keysym.M-S-0x48: string:[===H
+URxvt.keysym.C-M-S-0x48: string:[==H
+URxvt.keysym.Mod3-S-0x49: string:[======I
+URxvt.keysym.Mod4-S-0x49: string:[=====I
+URxvt.keysym.C-S-0x49: string:[=I
+URxvt.keysym.M-S-0x49: string:[===I
+URxvt.keysym.C-M-S-0x49: string:[==I
+URxvt.keysym.Mod3-S-0x4a: string:[======J
+URxvt.keysym.Mod4-S-0x4a: string:[=====J
+URxvt.keysym.C-S-0x4a: string:[=J
+URxvt.keysym.M-S-0x4a: string:[===J
+URxvt.keysym.C-M-S-0x4a: string:[==J
+URxvt.keysym.Mod3-S-0x4b: string:[======K
+URxvt.keysym.Mod4-S-0x4b: string:[=====K
+URxvt.keysym.C-S-0x4b: string:[=K
+URxvt.keysym.M-S-0x4b: string:[===K
+URxvt.keysym.C-M-S-0x4b: string:[==K
+URxvt.keysym.Mod3-S-0x4c: string:[======L
+URxvt.keysym.Mod4-S-0x4c: string:[=====L
+URxvt.keysym.C-S-0x4c: string:[=L
+URxvt.keysym.M-S-0x4c: string:[===L
+URxvt.keysym.C-M-S-0x4c: string:[==L
+URxvt.keysym.Mod3-S-0x4d: string:[======M
+URxvt.keysym.Mod4-S-0x4d: string:[=====M
+URxvt.keysym.C-S-0x4d: string:[=M
+URxvt.keysym.M-S-0x4d: string:[===M
+URxvt.keysym.C-M-S-0x4d: string:[==M
+URxvt.keysym.Mod3-S-0x4e: string:[======N
+URxvt.keysym.Mod4-S-0x4e: string:[=====N
+URxvt.keysym.C-S-0x4e: string:[=N
+URxvt.keysym.M-S-0x4e: string:[===N
+URxvt.keysym.C-M-S-0x4e: string:[==N
+URxvt.keysym.Mod3-S-0x4f: string:[======O
+URxvt.keysym.Mod4-S-0x4f: string:[=====O
+URxvt.keysym.C-S-0x4f: string:[=O
+URxvt.keysym.M-S-0x4f: string:[===O
+URxvt.keysym.C-M-S-0x4f: string:[==O
+URxvt.keysym.Mod3-S-0x50: string:[======P
+URxvt.keysym.Mod4-S-0x50: string:[=====P
+URxvt.keysym.C-S-0x50: string:[=P
+URxvt.keysym.M-S-0x50: string:[===P
+URxvt.keysym.C-M-S-0x50: string:[==P
+URxvt.keysym.Mod3-S-0x51: string:[======Q
+URxvt.keysym.Mod4-S-0x51: string:[=====Q
+URxvt.keysym.C-S-0x51: string:[=Q
+URxvt.keysym.M-S-0x51: string:[===Q
+URxvt.keysym.C-M-S-0x51: string:[==Q
+URxvt.keysym.Mod3-S-0x52: string:[======R
+URxvt.keysym.Mod4-S-0x52: string:[=====R
+URxvt.keysym.C-S-0x52: string:[=R
+URxvt.keysym.M-S-0x52: string:[===R
+URxvt.keysym.C-M-S-0x52: string:[==R
+URxvt.keysym.Mod3-S-0x53: string:[======S
+URxvt.keysym.Mod4-S-0x53: string:[=====S
+URxvt.keysym.C-S-0x53: string:[=S
+URxvt.keysym.M-S-0x53: string:[===S
+URxvt.keysym.C-M-S-0x53: string:[==S
+URxvt.keysym.Mod3-S-0x54: string:[======T
+URxvt.keysym.Mod4-S-0x54: string:[=====T
+URxvt.keysym.C-S-0x54: string:[=T
+URxvt.keysym.M-S-0x54: string:[===T
+URxvt.keysym.C-M-S-0x54: string:[==T
+URxvt.keysym.Mod3-S-0x55: string:[======U
+URxvt.keysym.Mod4-S-0x55: string:[=====U
+URxvt.keysym.C-S-0x55: string:[=U
+URxvt.keysym.M-S-0x55: string:[===U
+URxvt.keysym.C-M-S-0x55: string:[==U
+URxvt.keysym.Mod3-S-0x56: string:[======V
+URxvt.keysym.Mod4-S-0x56: string:[=====V
+URxvt.keysym.C-S-0x56: string:[=V
+URxvt.keysym.M-S-0x56: string:[===V
+URxvt.keysym.C-M-S-0x56: string:[==V
+URxvt.keysym.Mod3-S-0x57: string:[======W
+URxvt.keysym.Mod4-S-0x57: string:[=====W
+URxvt.keysym.C-S-0x57: string:[=W
+URxvt.keysym.M-S-0x57: string:[===W
+URxvt.keysym.C-M-S-0x57: string:[==W
+URxvt.keysym.Mod3-S-0x58: string:[======X
+URxvt.keysym.Mod4-S-0x58: string:[=====X
+URxvt.keysym.C-S-0x58: string:[=X
+URxvt.keysym.M-S-0x58: string:[===X
+URxvt.keysym.C-M-S-0x58: string:[==X
+URxvt.keysym.Mod3-S-0x59: string:[======Y
+URxvt.keysym.Mod4-S-0x59: string:[=====Y
+URxvt.keysym.C-S-0x59: string:[=Y
+URxvt.keysym.M-S-0x59: string:[===Y
+URxvt.keysym.C-M-S-0x59: string:[==Y
+URxvt.keysym.Mod3-S-0x5a: string:[======Z
+URxvt.keysym.Mod4-S-0x5a: string:[=====Z
+URxvt.keysym.C-S-0x5a: string:[=Z
+URxvt.keysym.M-S-0x5a: string:[===Z
+URxvt.keysym.C-M-S-0x5a: string:[==Z
+URxvt.keysym.Mod3-0x5b: string:@h[
+URxvt.keysym.Mod4-0x5b: string:@s[
+URxvt.keysym.Mod3-0x5c: string:@h\
+URxvt.keysym.Mod4-0x5c: string:@s\
+URxvt.keysym.Mod3-0x5d: string:@h]
+URxvt.keysym.Mod4-0x5d: string:@s]
+URxvt.keysym.Mod3-S-0x5e: string:[======^
+URxvt.keysym.Mod4-S-0x5e: string:[=====^
+URxvt.keysym.Mod3-S-0x5f: string:[======_
+URxvt.keysym.Mod4-S-0x5f: string:[=====_
+URxvt.keysym.Mod3-0x60: string:@h`
+URxvt.keysym.Mod4-0x60: string:@s`
+URxvt.keysym.Mod3-0x61: string:@ha
+URxvt.keysym.Mod4-0x61: string:@sa
+URxvt.keysym.Mod3-0x62: string:@hb
+URxvt.keysym.Mod4-0x62: string:@sb
+URxvt.keysym.Mod3-0x63: string:@hc
+URxvt.keysym.Mod4-0x63: string:@sc
+URxvt.keysym.Mod3-0x64: string:@hd
+URxvt.keysym.Mod4-0x64: string:@sd
+URxvt.keysym.Mod3-0x65: string:@he
+URxvt.keysym.Mod4-0x65: string:@se
+URxvt.keysym.Mod3-0x66: string:@hf
+URxvt.keysym.Mod4-0x66: string:@sf
+URxvt.keysym.Mod3-0x67: string:@hg
+URxvt.keysym.Mod4-0x67: string:@sg
+URxvt.keysym.Mod3-0x68: string:@hh
+URxvt.keysym.Mod4-0x68: string:@sh
+URxvt.keysym.Mod3-0x69: string:@hi
+URxvt.keysym.Mod4-0x69: string:@si
+URxvt.keysym.Mod3-0x6a: string:@hj
+URxvt.keysym.Mod4-0x6a: string:@sj
+URxvt.keysym.Mod3-0x6b: string:@hk
+URxvt.keysym.Mod4-0x6b: string:@sk
+URxvt.keysym.Mod3-0x6c: string:@hl
+URxvt.keysym.Mod4-0x6c: string:@sl
+URxvt.keysym.Mod3-0x6d: string:@hm
+URxvt.keysym.Mod4-0x6d: string:@sm
+URxvt.keysym.Mod3-0x6e: string:@hn
+URxvt.keysym.Mod4-0x6e: string:@sn
+URxvt.keysym.Mod3-0x6f: string:@ho
+URxvt.keysym.Mod4-0x6f: string:@so
+URxvt.keysym.Mod3-0x70: string:@hp
+URxvt.keysym.Mod4-0x70: string:@sp
+URxvt.keysym.Mod3-0x71: string:@hq
+URxvt.keysym.Mod4-0x71: string:@sq
+URxvt.keysym.Mod3-0x72: string:@hr
+URxvt.keysym.Mod4-0x72: string:@sr
+URxvt.keysym.Mod3-0x73: string:@hs
+URxvt.keysym.Mod4-0x73: string:@ss
+URxvt.keysym.Mod3-0x74: string:@ht
+URxvt.keysym.Mod4-0x74: string:@st
+URxvt.keysym.Mod3-0x75: string:@hu
+URxvt.keysym.Mod4-0x75: string:@su
+URxvt.keysym.Mod3-0x76: string:@hv
+URxvt.keysym.Mod4-0x76: string:@sv
+URxvt.keysym.Mod3-0x77: string:@hw
+URxvt.keysym.Mod4-0x77: string:@sw
+URxvt.keysym.Mod3-0x78: string:@hx
+URxvt.keysym.Mod4-0x78: string:@sx
+URxvt.keysym.Mod3-0x79: string:@hy
+URxvt.keysym.Mod4-0x79: string:@sy
+URxvt.keysym.Mod3-0x7a: string:@hz
+URxvt.keysym.Mod4-0x7a: string:@sz
+URxvt.keysym.Mod3-S-0x7b: string:[======{
+URxvt.keysym.Mod4-S-0x7b: string:[====={
+URxvt.keysym.Mod3-S-0x7c: string:[======|
+URxvt.keysym.Mod4-S-0x7c: string:[=====|
+URxvt.keysym.Mod3-S-0x7d: string:[======}
+URxvt.keysym.Mod4-S-0x7d: string:[=====}
+URxvt.keysym.Mod3-S-0x7e: string:[======~
+URxvt.keysym.Mod4-S-0x7e: string:[=====~
+URxvt.keysym.C-M-0x67: string:[====g
+! URxvt.keysym.C-M-0x20: string:[==== 
+! URxvt.keysym.Shift-0x20: string:@S 
+URxvt.keysym.C-M-Return: [====
+URxvt.keysym.C-Return: string:@c
+URxvt.keysym.Shift-Return: string:@S

@@ -5,9 +5,10 @@ Config { -- font = "-misc-fixed-*-*-*-*-12-*-*-*-*-*-*-*"
        , position = BottomW L 100 --Static { xpos = 0 , ypos = 0, width = 1230, height = 16 } --TopW L 90
        , border = TopB
        , borderColor = "#646464"
-       , allDesktops = True
+       , allDesktops = False
        , lowerOnStart = False
        , pickBroadest = False
+       , overrideRedirect = False
        , commands = [ Run DynNetwork ["-L", "0", "-H", "1000", "--normal","grey","--high","darkred"] 10
 		    , Run Com "/home/pankaj/usr/scripts/getId.sh" [] "wifiId" 10
                     , Run Cpu ["-L","3","-H","50","--normal","grey","--high","red"] 10
